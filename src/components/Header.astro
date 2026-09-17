@@ -1,0 +1,529 @@
+---
+import { localizedPath, t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  currentPath: string;
+}
+
+const { locale, currentPath } = Astro.props;
+
+const navItems = [
+  { href: locale === 'en' ? '/en/habitaciones' : '/habitaciones', label: t(locale, 'nav.rooms') },
+  { href: locale === 'en' ? '/en/amenidades' : '/amenidades', label: t(locale, 'nav.amenities') },
+  { href: locale === 'en' ? '/en/restaurantes' : '/restaurantes', label: t(locale, 'nav.dining') },
+  { href: locale === 'en' ? '/en/spa' : '/spa', label: t(locale, 'nav.spa') },
+  { href: locale === 'en' ? '/en/eventos' : '/eventos', label: t(locale, 'nav.events') },
+  { href: locale === 'en' ? '/en/ofertas' : '/ofertas', label: t(locale, 'nav.offers') },
+  { href: locale === 'en' ? '/en/contacto' : '/contacto', label: t(locale, 'nav.contact') },
+];
+
+const homePath = locale === 'en' ? '/en' : '/';
+const esPath = localizedPath(currentPath, 'es');
+const enPath = localizedPath(currentPath, 'en');
+---
+
+<header id="site-header" class="site-header">
+  <div class="header-container container">
+    <a href={homePath} class="brand-logo" aria-label="Hotel Dann Carlton Cali">
+      <img src="/scroll-logo.svg" alt="Dann Carlton Cali" class="logo-img logo-dark" width="160" height="42" />
+      <img src="/main-logo-white.svg" alt="Dann Carlton Cali" class="logo-img logo-white" width="160" height="42" />
+    </a>
+
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <ul class="nav-list">
+        {navItems.map((item) => {
+          const isActive = currentPath === item.href;
+          return (
+            <li>
+              <a href={item.href} class={`nav-link ${isActive ? 'active' : ''}`}>
+                {item.label}
+              </a>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+
+    <!-- Header Actions (Language & Book) -->
+    <div class="header-actions">
+      <div class="lang-switch" role="group" aria-label="Language Selector">
+        <a 
+          href={esPath} 
+          class={`lang-btn ${locale === 'es' ? 'active' : ''}`}
+          aria-label="Versión en Español"
+        >
+          ES
+        </a>
+        <span class="lang-divider">/</span>
+        <a 
+          href={enPath} 
+          class={`lang-btn ${locale === 'en' ? 'active' : ''}`}
+          aria-label="English version"
+        >
+          EN
+        </a>
+      </div>
+
+      <a 
+        href={`https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}`} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="btn btn-primary btn-header"
+      >
+        {t(locale, 'nav.book')}
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button 
+        id="menu-toggle" 
+        class="hamburger-btn" 
+        aria-expanded="false" 
+        aria-controls="mobile-menu"
+        aria-label={t(locale, 'nav.toggle_menu')}
+      >
+        <span class="line"></span>
+        <span class="line"></span>
+        <span class="line"></span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-menu" class="mobile-drawer" aria-hidden="true">
+    <div class="mobile-drawer-inner container">
+      <nav class="mobile-nav">
+        <ul class="mobile-nav-list">
+          <li>
+            <a href={homePath} class="mobile-nav-link">
+              {t(locale, 'nav.home')}
+            </a>
+          </li>
+          {navItems.map((item) => (
+            <li>
+              <a href={item.href} class="mobile-nav-link">
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div class="mobile-drawer-footer">
+        <div class="mobile-lang">
+          <a href={esPath} class={`lang-btn ${locale === 'es' ? 'active' : ''}`}>Español</a>
+          <span class="lang-divider">·</span>
+          <a href={enPath} class={`lang-btn ${locale === 'en' ? 'active' : ''}`}>English</a>
+        </div>
+        <a 
+          href={`https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn btn-primary mobile-book-btn"
+        >
+          {t(locale, 'nav.book')}
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    border-bottom: 1px solid transparent;
+  }
+
+  /* Transparent state over Hero */
+  .site-header:not(.is-scrolled) {
+    background-color: transparent;
+    color: #FFFFFF;
+  }
+
+  .site-header:not(.is-scrolled) .logo-dark {
+    display: none;
+  }
+
+  .site-header:not(.is-scrolled) .logo-white {
+    display: block;
+  }
+
+  .site-header:not(.is-scrolled) .nav-link {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .site-header:not(.is-scrolled) .nav-link:hover,
+  .site-header:not(.is-scrolled) .nav-link.active {
+    color: #FFFFFF;
+  }
+
+  .site-header:not(.is-scrolled) .lang-btn {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .site-header:not(.is-scrolled) .lang-btn.active {
+    color: #FFFFFF;
+  }
+
+  .site-header:not(.is-scrolled) .lang-divider {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  .site-header:not(.is-scrolled) .btn-header {
+    background-color: #FFFFFF;
+    color: var(--ink);
+  }
+
+  .site-header:not(.is-scrolled) .line {
+    background-color: #FFFFFF;
+  }
+
+  /* Scrolled solid state */
+  .site-header.is-scrolled {
+    background-color: var(--paper);
+    color: var(--ink);
+    border-bottom-color: var(--stone);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  .site-header.is-scrolled .logo-dark {
+    display: block;
+  }
+
+  .site-header.is-scrolled .logo-white {
+    display: none;
+  }
+
+  .site-header.is-scrolled .nav-link {
+    color: var(--slate);
+  }
+
+  .site-header.is-scrolled .nav-link:hover,
+  .site-header.is-scrolled .nav-link.active {
+    color: var(--ink);
+  }
+
+  .site-header.is-scrolled .lang-btn {
+    color: var(--slate);
+  }
+
+  .site-header.is-scrolled .lang-btn.active {
+    color: var(--ink);
+  }
+
+  .site-header.is-scrolled .lang-divider {
+    color: var(--stone);
+  }
+
+  .site-header.is-scrolled .btn-header {
+    background-color: var(--ink);
+    color: var(--paper);
+  }
+
+  .site-header.is-scrolled .line {
+    background-color: var(--ink);
+  }
+
+  .header-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 80px;
+    transition: height 0.3s ease;
+  }
+
+  .site-header.is-scrolled .header-container {
+    height: 70px;
+  }
+
+  .brand-logo {
+    display: flex;
+    align-items: center;
+    z-index: 101;
+  }
+
+  .logo-img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  @media (min-width: 1024px) {
+    .desktop-nav {
+      display: block;
+    }
+  }
+
+  .nav-list {
+    display: flex;
+    align-items: center;
+    gap: 1.75rem;
+    list-style: none;
+  }
+
+  .nav-link {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    position: relative;
+    padding: 0.25rem 0;
+  }
+
+  .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--brass);
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    z-index: 101;
+  }
+
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+  }
+
+  .lang-btn {
+    padding: 0.2rem 0.35rem;
+    border-radius: 2px;
+    transition: color 0.2s ease;
+  }
+
+  .lang-btn.active {
+    font-weight: 700;
+  }
+
+  .btn-header {
+    padding: 0.55rem 1.25rem;
+    font-size: var(--text-xs);
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 640px) {
+    .btn-header {
+      display: none;
+    }
+  }
+
+  /* Hamburger Button */
+  .hamburger-btn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 32px;
+    height: 32px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+  }
+
+  @media (min-width: 1024px) {
+    .hamburger-btn {
+      display: none;
+    }
+  }
+
+  .line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+    border-radius: 1px;
+  }
+
+  /* Mobile Drawer */
+  .mobile-drawer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--paper);
+    color: var(--ink);
+    z-index: 100;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+    padding-top: 90px;
+    overflow-y: auto;
+  }
+
+  .mobile-drawer.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .mobile-drawer-inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    padding-bottom: 2.5rem;
+  }
+
+  .mobile-nav-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .mobile-nav-link {
+    font-family: var(--font-serif);
+    font-size: 1.75rem;
+    color: var(--ink);
+    display: inline-block;
+  }
+
+  .mobile-drawer-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--stone);
+  }
+
+  .mobile-lang {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-sm);
+    color: var(--slate);
+  }
+
+  .mobile-lang .lang-btn {
+    color: var(--slate) !important;
+    font-size: var(--text-sm);
+    padding: 0.25rem 0.5rem;
+    border-bottom: 2px solid transparent;
+  }
+
+  .mobile-lang .lang-btn.active {
+    color: var(--ink) !important;
+    font-weight: 600;
+    border-bottom-color: var(--brass);
+  }
+
+  .mobile-lang .lang-divider {
+    color: var(--stone) !important;
+  }
+
+  .mobile-book-btn {
+    width: 100%;
+    padding: 0.85rem;
+  }
+
+  /* When drawer is open, keep header icons readable and morph hamburger to X */
+  .site-header.has-drawer-open {
+    background-color: var(--paper);
+    border-bottom-color: var(--stone);
+  }
+
+  .site-header.has-drawer-open .logo-dark {
+    display: block !important;
+  }
+
+  .site-header.has-drawer-open .logo-white {
+    display: none !important;
+  }
+
+  .site-header.has-drawer-open .header-actions .lang-switch .lang-btn {
+    color: var(--slate) !important;
+  }
+
+  .site-header.has-drawer-open .header-actions .lang-switch .lang-btn.active {
+    color: var(--ink) !important;
+  }
+
+  .site-header.has-drawer-open .header-actions .lang-divider {
+    color: var(--stone) !important;
+  }
+
+  .site-header.has-drawer-open .hamburger-btn .line {
+    background-color: var(--ink) !important;
+  }
+
+  .site-header.has-drawer-open .hamburger-btn .line:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+
+  .site-header.has-drawer-open .hamburger-btn .line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .site-header.has-drawer-open .hamburger-btn .line:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+</style>
+
+<script>
+  function initHeader() {
+    const header = document.getElementById('site-header');
+    const toggle = document.getElementById('menu-toggle');
+    const drawer = document.getElementById('mobile-menu');
+
+    if (!header) return;
+
+    const handleScroll = () => {
+      if (window.scrollY > 40) {
+        header.classList.add('is-scrolled');
+      } else {
+        header.classList.remove('is-scrolled');
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+
+    if (toggle && drawer) {
+      toggle.addEventListener('click', () => {
+        const isOpen = drawer.classList.toggle('is-open');
+        header.classList.toggle('has-drawer-open', isOpen);
+        toggle.setAttribute('aria-expanded', String(isOpen));
+        drawer.setAttribute('aria-hidden', String(!isOpen));
+        document.body.style.overflow = isOpen ? 'hidden' : '';
+      });
+
+      // Close drawer when any mobile nav link is clicked
+      const mobileLinks = drawer.querySelectorAll('a');
+      mobileLinks.forEach((link) => {
+        link.addEventListener('click', () => {
+          drawer.classList.remove('is-open');
+          header.classList.remove('has-drawer-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          drawer.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+        });
+      });
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', initHeader);
+</script>

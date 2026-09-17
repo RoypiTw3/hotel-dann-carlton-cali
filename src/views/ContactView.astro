@@ -1,0 +1,339 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import Cta from '../components/Cta.astro';
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Base 
+  title={t(locale, 'contact_page.hero_title')} 
+  description={t(locale, 'contact_page.hero_sub')}
+  locale={locale}
+  image="/img/fachada-2.jpg"
+>
+  <Hero 
+    tag={locale === 'en' ? 'Connect With Us' : 'Canales de Atención'}
+    title={t(locale, 'contact_page.hero_title')}
+    subtitle={t(locale, 'contact_page.hero_sub')}
+    image="/img/fachada-2.jpg"
+  />
+
+  <section class="section contact-section">
+    <div class="container">
+      <div class="grid-12 contact-grid">
+        <!-- Info Column -->
+        <div class="contact-info-col">
+          <SectionIntro 
+            tag={locale === 'en' ? 'Direct Information' : 'Información Directa'}
+            title={locale === 'en' ? 'We are here to assist you' : 'Estamos para servirle'}
+            desc={t(locale, 'contact_page.hero_sub')}
+          />
+
+          <div class="info-cards-list">
+            <div class="info-card">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+              </div>
+              <div class="info-text">
+                <span class="info-label">{t(locale, 'contact_page.address_label')}</span>
+                <p class="info-val">Carrera 2 # 1-60, Barrio El Peñón</p>
+                <p class="info-sub text-slate">Cali, Valle del Cauca · Código Postal 760004</p>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+              </div>
+              <div class="info-text">
+                <span class="info-label">{t(locale, 'contact_page.phones_label')}</span>
+                <p class="info-val">
+                  <a href="tel:+576028933000">+57 60 (2) 893 3000</a> / <a href="tel:+576028862000">886 2000</a>
+                </p>
+                <p class="info-sub text-slate">{t(locale, 'contact_page.hours_val')}</p>
+              </div>
+            </div>
+
+            <div class="info-card">
+              <div class="info-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                  <polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+              </div>
+              <div class="info-text">
+                <span class="info-label">{t(locale, 'contact_page.email_label')}</span>
+                <p class="info-val">
+                  <a href="mailto:reservas@hotelesdanncali.com.co">reservas@hotelesdanncali.com.co</a>
+                </p>
+                <p class="info-sub text-slate">{locale === 'en' ? 'Direct bookings & corporate accounts' : 'Reservas directas y cuentas corporativas'}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Direct Google Maps Card -->
+          <div class="maps-card">
+            <div class="maps-header">
+              <h4 class="maps-title font-serif">{t(locale, 'contact_page.map_title')}</h4>
+              <p class="maps-desc text-slate">
+                {locale === 'en'
+                  ? 'Open directions in Google Maps to navigate directly to the Carlton or Dann Tower entrance.'
+                  : 'Abra la ruta en Google Maps para llegar directamente al acceso de la Torre Carlton o Dann.'}
+              </p>
+            </div>
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=3.45004,-76.54053" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn btn-outline maps-direct-btn"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+              <span>{locale === 'en' ? 'Open in Google Maps' : 'Abrir en Google Maps'}</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Contact Form Column -->
+        <div class="contact-form-col">
+          <div class="form-container-box">
+            <h3 class="box-title font-serif">{t(locale, 'contact_page.send_msg_title')}</h3>
+            <p class="box-desc text-slate">
+              {locale === 'en'
+                ? 'Fill out the form below and our concierge team will respond within 2 business hours.'
+                : 'Complete el formulario y nuestro equipo de conserjería responderá en un plazo máximo de 2 horas hábiles.'}
+            </p>
+
+            <form 
+              action="mailto:reservas@hotelesdanncali.com.co" 
+              method="GET" 
+              class="inquiry-form"
+            >
+              <div class="form-group">
+                <label class="form-label">{t(locale, 'contact_page.name_placeholder')}</label>
+                <input type="text" name="name" required class="form-input" placeholder={t(locale, 'contact_page.name_placeholder')} />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{t(locale, 'contact_page.email_placeholder')}</label>
+                <input type="email" name="email" required class="form-input" placeholder={t(locale, 'contact_page.email_placeholder')} />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{t(locale, 'contact_page.phone_placeholder')}</label>
+                <input type="tel" name="phone" class="form-input" placeholder="+57 ..." />
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">{t(locale, 'contact_page.msg_placeholder')}</label>
+                <textarea name="body" rows="4" required class="form-textarea" placeholder={t(locale, 'contact_page.msg_placeholder')}></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary form-submit-btn">
+                <span>{t(locale, 'contact_page.send_btn')}</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Cta locale={locale} />
+</Base>
+
+<style>
+  .contact-section {
+    background-color: var(--paper);
+  }
+
+  .contact-grid {
+    gap: 3.5rem;
+    align-items: flex-start;
+  }
+
+  .contact-info-col {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 992px) {
+    .contact-info-col {
+      grid-column: span 6;
+    }
+  }
+
+  .info-cards-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .info-card {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    background-color: rgba(230, 227, 220, 0.25);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+  }
+
+  .info-icon {
+    color: var(--brass);
+    background-color: rgba(169, 138, 91, 0.12);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .info-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slate);
+  }
+
+  .info-val {
+    font-size: var(--text-base);
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .info-val a:hover {
+    color: var(--brass);
+  }
+
+  .info-sub {
+    font-size: var(--text-xs);
+  }
+
+  /* Maps Card */
+  .maps-card {
+    padding: 2rem;
+    background-color: rgba(230, 227, 220, 0.4);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .maps-title {
+    font-size: 1.5rem;
+    margin-bottom: 0.35rem;
+  }
+
+  .maps-desc {
+    font-size: var(--text-xs);
+    line-height: 1.6;
+  }
+
+  .maps-direct-btn {
+    align-self: flex-start;
+  }
+
+  /* Form Column */
+  .contact-form-col {
+    grid-column: span 12;
+  }
+
+  @media (min-width: 992px) {
+    .contact-form-col {
+      grid-column: span 6;
+    }
+  }
+
+  .form-container-box {
+    padding: 3rem 2.5rem;
+    background-color: rgba(230, 227, 220, 0.3);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+  }
+
+  .box-title {
+    font-size: var(--text-lg);
+    margin-bottom: 0.5rem;
+  }
+
+  .box-desc {
+    font-size: var(--text-sm);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+  }
+
+  .inquiry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .form-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slate);
+  }
+
+  .form-input,
+  .form-textarea {
+    width: 100%;
+    background-color: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 0.75rem 0.85rem;
+    font-size: var(--text-sm);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    transition: border-color 0.2s ease;
+  }
+
+  .form-input:focus,
+  .form-textarea:focus {
+    outline: none;
+    border-color: var(--brass);
+  }
+
+  .form-submit-btn {
+    padding: 0.85rem 1.75rem;
+    align-self: flex-start;
+    margin-top: 0.5rem;
+  }
+</style>

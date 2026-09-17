@@ -1,0 +1,265 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import Cta from '../components/Cta.astro';
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const treatments = [
+  {
+    title: {
+      es: 'Facial Hidratación Profunda con Ácido Hialurónico',
+      en: 'Deep Hydration Facial with Pure Hyaluronic Acid'
+    },
+    duration: '60 min',
+    desc: {
+      es: 'Tratamiento botánico revitalizante que restaura la luminosidad de la piel, atenúa líneas de expresión y reequilibra el manto hidrolipídico.',
+      en: 'A botanical restorative treatment designed to replenish cellular moisture, smooth fine lines, and restore vibrant radiance.'
+    }
+  },
+  {
+    title: {
+      es: 'Masaje Relajante con Aceites de Almendras & Bambuterapia',
+      en: 'Relaxing Almond Oil Massage with Bamboo Therapy'
+    },
+    duration: '60 min',
+    desc: {
+      es: 'Maniobras suaves y fluidas combinadas con cañas de bambú tibias para liberar tensiones musculares acumuladas y calmar el sistema nervioso.',
+      en: 'Gentle, flowing strokes paired with warm bamboo rods to dissolve deep-seated tension and soothe the nervous system.'
+    }
+  },
+  {
+    title: {
+      es: 'Exfoliación Corporal de Café Colombiano & Cacao',
+      en: 'Colombian Coffee & Raw Cacao Body Polish'
+    },
+    duration: '60 min',
+    desc: {
+      es: 'Renovación celular integral con café orgánico de la región, cacao puro y manteca de karité, dejando la piel tersa, nutrida y perfumada.',
+      en: 'Invigorating skin polish blending local organic coffee beans, raw cacao, and shea butter for velvety, revitalized skin.'
+    }
+  },
+  {
+    title: {
+      es: 'Ritual en Pareja en Cabina Privada con Hidroterapia',
+      en: 'Couples Sensory Ritual in Private Suite with Hydrotherapy'
+    },
+    duration: '90 min',
+    desc: {
+      es: 'Experiencia compartida que incluye masaje aromático en simultáneo, copa de espumoso y acceso a jacuzzi privado con sales del Himalaya.',
+      en: 'A shared sensorial sanctuary including dual aromatic massages, sparkling wine, and private jacuzzi hydrotherapy infused with pink salts.'
+    }
+  },
+  {
+    title: {
+      es: 'Terapia de Piedras Volcánicas Calientes',
+      en: 'Basalt Hot Stone Therapeutic Massage'
+    },
+    duration: '75 min',
+    desc: {
+      es: 'Piedras volcánicas a temperatura controlada aplicadas en puntos energéticos clave para mejorar la circulación y promover un sueño reparador.',
+      en: 'Smooth heated basalt stones placed along energy meridians to enhance peripheral circulation and induce tranquil restorative sleep.'
+    }
+  },
+  {
+    title: {
+      es: 'Tratamiento Facial Antiedad con Colágeno Marino',
+      en: 'Marine Collagen Age-Defying Facial'
+    },
+    duration: '60 min',
+    desc: {
+      es: 'Protocolo reafirmante intensivo con velo de colágeno y masaje miofascial que redefine el óvalo facial y aporta elasticidad inmediata.',
+      en: 'Intensive firming protocol utilizing marine collagen sheets and myofascial drainage to redefine contours and enhance elasticity.'
+    }
+  }
+];
+---
+
+<Base 
+  title={t(locale, 'spa_page.hero_title')} 
+  description={t(locale, 'spa_page.hero_sub')}
+  locale={locale}
+  image="/img/piscina-pareja.jpg"
+>
+  <Hero 
+    tag={locale === 'en' ? 'Holistic Wellness' : 'Bienestar Holístico'}
+    title={t(locale, 'spa_page.hero_title')}
+    subtitle={t(locale, 'spa_page.hero_sub')}
+    image="/img/piscina-pareja.jpg"
+  />
+
+  <section class="section spa-treatments-section">
+    <div class="container">
+      <SectionIntro 
+        tag={locale === 'en' ? 'Curated Rituals' : 'Rituales Seleccionados'}
+        title={t(locale, 'spa_page.treatments_title')}
+        desc={locale === 'en'
+          ? 'Each therapy is performed by certified wellness practitioners using natural organic essences.'
+          : 'Cada terapia es realizada por profesionales certificados utilizando esencias botánicas orgánicas.'}
+      />
+
+      <div class="treatments-grid">
+        {treatments.map((tr) => (
+          <article class="treatment-card">
+            <div class="tr-top">
+              <span class="tr-duration-badge">{tr.duration}</span>
+            </div>
+            <h3 class="tr-title font-serif">{tr.title[locale]}</h3>
+            <p class="tr-desc text-slate">{tr.desc[locale]}</p>
+            <div class="tr-footer">
+              <a 
+                href="https://wa.me/573108933000?text=Hola%2C%20quisiera%20agendar%20una%20cita%20en%20el%20Spa%20Elena%20Prada" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="link-arrow"
+              >
+                <span>{t(locale, 'spa_page.book_treatment')}</span>
+                &rarr;
+              </a>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <!-- Spa Reservation Box -->
+      <div class="spa-booking-box">
+        <div class="sb-content">
+          <p class="tagline">{locale === 'en' ? 'Personalized Care' : 'Atención Personalizada'}</p>
+          <h3 class="sb-title font-serif">{locale === 'en' ? 'Book Your Wellness Appointment' : 'Reserve su Cita de Bienestar'}</h3>
+          <p class="sb-desc text-slate">
+            {locale === 'en' 
+              ? 'Appointments are recommended at least 24 hours in advance. Wet zone access included with any 60-minute service.'
+              : 'Recomendamos agendar con al menos 24 horas de anticipación. El acceso a la zona húmeda está incluido con cualquier servicio de 60 minutos.'}
+          </p>
+          <div class="sb-actions">
+            <a 
+              href="https://wa.me/573108933000?text=Hola%2C%20quisiera%20agendar%20una%20cita%20en%20el%20Spa%20Elena%20Prada" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn btn-primary"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+              </svg>
+              <span>{t(locale, 'spa_page.whatsapp_btn')}</span>
+            </a>
+            <a href="tel:+576028933000" class="btn btn-outline">
+              <span>{locale === 'en' ? 'Call Concierge: +57 602 893 3000' : 'Llamar: +57 60 (2) 893 3000'}</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Cta locale={locale} />
+</Base>
+
+<style>
+  .spa-treatments-section {
+    background-color: var(--paper);
+  }
+
+  .treatments-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .treatments-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .treatments-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .treatment-card {
+    background-color: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 2rem 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .treatment-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  .tr-duration-badge {
+    display: inline-block;
+    background-color: rgba(169, 138, 91, 0.12);
+    color: var(--brass);
+    font-size: var(--text-xs);
+    font-weight: 700;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+  }
+
+  .tr-title {
+    font-size: 1.35rem;
+    line-height: 1.25;
+  }
+
+  .tr-desc {
+    font-size: var(--text-xs);
+    line-height: 1.65;
+  }
+
+  .tr-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--stone);
+  }
+
+  .spa-booking-box {
+    margin-top: 4.5rem;
+    padding: 3.5rem 2rem;
+    background-color: rgba(230, 227, 220, 0.35);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    text-align: center;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .sb-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .sb-title {
+    font-size: var(--text-lg);
+  }
+
+  .sb-desc {
+    font-size: var(--text-sm);
+    line-height: 1.65;
+    max-width: 560px;
+  }
+
+  .sb-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+</style>

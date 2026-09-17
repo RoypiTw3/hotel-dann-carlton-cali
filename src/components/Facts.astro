@@ -1,0 +1,89 @@
+---
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+const facts = [
+  { num: t(locale, 'facts.rooms_num'), label: t(locale, 'facts.rooms_label') },
+  { num: t(locale, 'facts.space_num'), unit: t(locale, 'facts.space_unit'), label: t(locale, 'facts.space_label') },
+  { num: t(locale, 'facts.venues_num'), label: t(locale, 'facts.venues_label') },
+  { num: t(locale, 'facts.towers_num'), label: t(locale, 'facts.towers_label') },
+];
+---
+
+<section class="facts-section">
+  <div class="container">
+    <div class="facts-grid">
+      {facts.map((fact) => (
+        <div class="fact-item">
+          <p class="fact-number font-serif">
+            {fact.num}
+            {fact.unit && <span class="fact-unit">{fact.unit}</span>}
+          </p>
+          <p class="fact-label">{fact.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .facts-section {
+    padding: 3.5rem 0;
+    border-top: 1px solid var(--stone);
+    border-bottom: 1px solid var(--stone);
+    background-color: var(--paper);
+  }
+
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .facts-grid {
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.5rem;
+    }
+  }
+
+  .fact-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .fact-number {
+    font-size: var(--text-xl);
+    color: var(--ink);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .fact-unit {
+    font-size: var(--text-md);
+    color: var(--brass);
+    font-family: var(--font-sans);
+    margin-left: 2px;
+  }
+
+  .fact-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slate);
+  }
+
+  @media (max-width: 640px) {
+    .fact-number {
+      font-size: 2.25rem;
+    }
+  }
+</style>

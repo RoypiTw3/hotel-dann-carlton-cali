@@ -1,0 +1,259 @@
+---
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  variant?: 'hero' | 'standalone';
+}
+
+const { locale, variant = 'hero' } = Astro.props;
+
+// Compute default dates (tomorrow and 3 days ahead)
+const now = new Date();
+const tomorrow = new Date(now);
+tomorrow.setDate(now.getDate() + 1);
+const nextDay = new Date(now);
+nextDay.setDate(now.getDate() + 3);
+
+const formatDateForInput = (d: Date) => d.toISOString().split('T')[0];
+const defaultDateIn = formatDateForInput(tomorrow);
+const defaultDateOut = formatDateForInput(nextDay);
+---
+
+<div class={`booking-bar-wrapper ${variant === 'hero' ? 'is-hero' : 'is-standalone'}`}>
+  <form 
+    id="booking-form"
+    action="https://reservations.travelclick.com/9878657" 
+    method="GET" 
+    target="_blank" 
+    rel="noopener noreferrer"
+    class="booking-form"
+  >
+    <input type="hidden" name="HotelID" value="9878657" />
+    <input type="hidden" name="LanguageID" value={locale === 'en' ? '1' : '2'} />
+    <input type="hidden" name="Rooms" value="1" />
+    <!-- Hidden inputs for TravelClick format MM/DD/YYYY -->
+    <input type="hidden" id="DateIn" name="DateIn" value="" />
+    <input type="hidden" id="DateOut" name="DateOut" value="" />
+
+    <!-- Arrival -->
+    <div class="booking-field">
+      <label for="checkin-date" class="field-label">{t(locale, 'booking.checkin')}</label>
+      <input 
+        type="date" 
+        id="checkin-date" 
+        class="field-input" 
+        value={defaultDateIn}
+        min={formatDateForInput(now)}
+        required
+      />
+    </div>
+
+    <!-- Departure -->
+    <div class="booking-field">
+      <label for="checkout-date" class="field-label">{t(locale, 'booking.checkout')}</label>
+      <input 
+        type="date" 
+        id="checkout-date" 
+        class="field-input" 
+        value={defaultDateOut}
+        min={defaultDateIn}
+        required
+      />
+    </div>
+
+    <!-- Guests Selection -->
+    <div class="booking-field">
+      <label for="guests-count" class="field-label">{t(locale, 'booking.guests')}</label>
+      <select id="guests-count" name="Adults" class="field-select">
+        <option value="1">{t(locale, 'booking.guest_single')}</option>
+        <option value="2" selected>{t(locale, 'booking.guest_double')}</option>
+        <option value="3">{t(locale, 'booking.guest_multiple', { count: 3 })}</option>
+        <option value="4">{t(locale, 'booking.guest_multiple', { count: 4 })}</option>
+      </select>
+    </div>
+
+    <!-- Promo code (optional toggle) -->
+    <div class="booking-field promo-field">
+      <label for="promocode" class="field-label">{t(locale, 'booking.promo_code')}</label>
+      <input 
+        type="text" 
+        id="promocode" 
+        name="RatePlanId" 
+        placeholder={locale === 'en' ? 'Optional' : 'Opcional'}
+        class="field-input promo-input" 
+      />
+    </div>
+
+    <!-- Submit Button -->
+    <div class="booking-submit-wrap">
+      <button type="submit" class="btn btn-primary booking-submit-btn">
+        <span>{t(locale, 'booking.submit')}</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+    </div>
+  </form>
+
+  <p class="booking-perks">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+    </svg>
+    <span>{t(locale, 'booking.direct_perks')}</span>
+  </p>
+</div>
+
+<style>
+  .booking-bar-wrapper {
+    width: 100%;
+    margin-top: 2.5rem;
+  }
+
+  .booking-bar-wrapper.is-hero {
+    max-width: 1080px;
+  }
+
+  .booking-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    background-color: var(--paper);
+    color: var(--ink);
+    padding: 1.25rem;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--stone);
+    gap: 1rem;
+    align-items: end;
+  }
+
+  @media (min-width: 768px) {
+    .booking-form {
+      grid-template-columns: 1.2fr 1.2fr 1fr 0.8fr 1.5fr;
+      padding: 1rem 1.5rem;
+      gap: 1.25rem;
+    }
+  }
+
+  .booking-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .field-label {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slate);
+  }
+
+  .field-input,
+  .field-select {
+    width: 100%;
+    background-color: transparent;
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 0.65rem 0.75rem;
+    font-size: var(--text-sm);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    transition: border-color 0.2s ease;
+  }
+
+  .field-input:focus,
+  .field-select:focus {
+    outline: none;
+    border-color: var(--brass);
+  }
+
+  .promo-input::placeholder {
+    color: var(--slate);
+    opacity: 0.7;
+  }
+
+  .booking-submit-btn {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: var(--text-sm);
+    letter-spacing: 0.04em;
+    height: 44px;
+  }
+
+  .booking-perks {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    font-size: var(--text-xs);
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: 0.02em;
+  }
+
+  .is-standalone .booking-perks {
+    color: var(--slate);
+  }
+
+  .booking-perks svg {
+    color: var(--brass-light);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 768px) {
+    .promo-field {
+      display: none;
+    }
+    
+    .booking-perks {
+      font-size: 0.7rem;
+      flex-wrap: wrap;
+    }
+  }
+</style>
+
+<script>
+  function setupBookingForm() {
+    const form = document.getElementById('booking-form');
+    if (!form) return;
+
+    const checkinInput = document.getElementById('checkin-date') as HTMLInputElement;
+    const checkoutInput = document.getElementById('checkout-date') as HTMLInputElement;
+    const hiddenDateIn = document.getElementById('DateIn') as HTMLInputElement;
+    const hiddenDateOut = document.getElementById('DateOut') as HTMLInputElement;
+
+    const formatToTravelClick = (isoString: string) => {
+      if (!isoString) return '';
+      const [year, month, day] = isoString.split('-');
+      return `${month}/${day}/${year}`;
+    };
+
+    const syncDates = () => {
+      if (checkinInput && checkoutInput) {
+        checkoutInput.min = checkinInput.value;
+        if (checkoutInput.value <= checkinInput.value) {
+          const next = new Date(checkinInput.value);
+          next.setDate(next.getDate() + 1);
+          checkoutInput.value = next.toISOString().split('T')[0];
+        }
+      }
+      if (hiddenDateIn && checkinInput) {
+        hiddenDateIn.value = formatToTravelClick(checkinInput.value);
+      }
+      if (hiddenDateOut && checkoutInput) {
+        hiddenDateOut.value = formatToTravelClick(checkoutInput.value);
+      }
+    };
+
+    checkinInput?.addEventListener('change', syncDates);
+    checkoutInput?.addEventListener('change', syncDates);
+    syncDates();
+
+    form.addEventListener('submit', () => {
+      syncDates();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', setupBookingForm);
+</script>

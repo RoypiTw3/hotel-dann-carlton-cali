@@ -1,0 +1,409 @@
+---
+import type { Room } from '../data/rooms';
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  room: Room;
+  locale: Locale;
+  variant?: 'row' | 'card';
+  reversed?: boolean;
+}
+
+const { room, locale, variant = 'row', reversed = false } = Astro.props;
+
+const formatCOP = (num: number) => {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    maximumFractionDigits: 0
+  }).format(num);
+};
+
+const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}&roomtypeid=${room.roomtypeid}`;
+---
+
+{variant === 'row' ? (
+  <article class={`room-row ${reversed ? 'is-reversed' : ''}`}>
+    <!-- Photo Column -->
+    <div class="room-image-col">
+      <div class="image-wrapper">
+        <img 
+          src={room.image} 
+          alt={room.name[locale]} 
+          class="room-photo"
+          loading="lazy"
+        />
+        <span class="tower-badge">{room.tower[locale]}</span>
+      </div>
+    </div>
+
+    <!-- Text & Details Column -->
+    <div class="room-info-col">
+      <div class="room-header">
+        <span class="room-area-tag">{room.area}</span>
+        <h3 class="room-name">{room.name[locale]}</h3>
+        <p class="room-desc text-slate">{room.description[locale]}</p>
+      </div>
+
+      <!-- Specs Specs Badges -->
+      <div class="room-specs">
+        <div class="spec-item">
+          <span class="spec-label">{t(locale, 'rooms_page.bed')}</span>
+          <span class="spec-value">{room.bed[locale]}</span>
+        </div>
+        <div class="spec-divider"></div>
+        <div class="spec-item">
+          <span class="spec-label">{t(locale, 'rooms_page.capacity')}</span>
+          <span class="spec-value">{room.capacity[locale]}</span>
+        </div>
+        <div class="spec-divider"></div>
+        <div class="spec-item">
+          <span class="spec-label">{t(locale, 'rooms_page.area')}</span>
+          <span class="spec-value">{room.area}</span>
+        </div>
+      </div>
+
+      <!-- Features bullet list -->
+      <ul class="room-features text-slate">
+        {room.features[locale].map((feat) => (
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>{feat}</span>
+          </li>
+        ))}
+      </ul>
+
+      <!-- Pricing & Booking CTA -->
+      <div class="room-footer">
+        <div class="room-price-wrap">
+          <span class="price-prefix">{t(locale, 'rooms_page.from')}</span>
+          <span class="price-amount">{formatCOP(room.priceCOP)}</span>
+          <span class="price-suffix">{t(locale, 'rooms_page.per_night')}</span>
+        </div>
+
+        <a 
+          href={bookingUrl} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn btn-primary room-book-btn"
+        >
+          <span>{t(locale, 'rooms_page.book_room')}</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+    </div>
+  </article>
+) : (
+  <article class="room-card">
+    <div class="card-image-wrap">
+      <img src={room.image} alt={room.name[locale]} class="card-photo" loading="lazy" />
+      <span class="card-tower-badge">{room.tower[locale]}</span>
+    </div>
+    <div class="card-body">
+      <div class="card-meta">
+        <span>{room.bed[locale]}</span>
+        <span>·</span>
+        <span>{room.area}</span>
+      </div>
+      <h3 class="card-title">{room.name[locale]}</h3>
+      <p class="card-desc text-slate">{room.description[locale]}</p>
+      <div class="card-footer">
+        <div class="card-price">
+          <span class="price-prefix">{t(locale, 'rooms_page.from')}</span>
+          <span class="price-val">{formatCOP(room.priceCOP)}</span>
+        </div>
+        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="link-arrow">
+          <span>{t(locale, 'nav.book')}</span>
+          &rarr;
+        </a>
+      </div>
+    </div>
+  </article>
+)}
+
+<style>
+  /* Row Variant */
+  .room-row {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  @media (min-width: 992px) {
+    .room-row {
+      grid-template-columns: 6fr 6fr;
+      gap: 3.5rem;
+    }
+
+    .room-row.is-reversed .room-image-col {
+      order: 2;
+    }
+
+    .room-row.is-reversed .room-info-col {
+      order: 1;
+    }
+  }
+
+  .image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-sm);
+    aspect-ratio: 16 / 10;
+    background-color: var(--stone);
+  }
+
+  .room-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .image-wrapper:hover .room-photo {
+    transform: scale(1.03);
+  }
+
+  .tower-badge {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: rgba(14, 30, 58, 0.88);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .room-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .room-area-tag {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--brass);
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 0.35rem;
+  }
+
+  .room-name {
+    font-size: var(--text-lg);
+    line-height: 1.2;
+    margin-bottom: 0.75rem;
+  }
+
+  .room-desc {
+    font-size: var(--text-sm);
+    line-height: 1.65;
+  }
+
+  .room-specs {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.85rem 1.25rem;
+    background-color: rgba(230, 227, 220, 0.35);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--stone);
+    flex-wrap: wrap;
+  }
+
+  .spec-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .spec-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--slate);
+  }
+
+  .spec-value {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .spec-divider {
+    width: 1px;
+    height: 24px;
+    background-color: var(--stone);
+  }
+
+  .room-features {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+  }
+
+  @media (min-width: 640px) {
+    .room-features {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .room-features li {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .room-features svg {
+    color: var(--brass);
+    flex-shrink: 0;
+  }
+
+  .room-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--stone);
+    flex-wrap: wrap;
+  }
+
+  .room-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .price-prefix {
+    font-size: var(--text-xs);
+    color: var(--slate);
+  }
+
+  .price-amount {
+    font-family: var(--font-serif);
+    font-size: 1.5rem;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .price-suffix {
+    font-size: var(--text-xs);
+    color: var(--slate);
+  }
+
+  .room-book-btn {
+    padding: 0.65rem 1.25rem;
+  }
+
+  /* Card Variant */
+  .room-card {
+    background-color: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .room-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  }
+
+  .card-image-wrap {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+  }
+
+  .card-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .card-tower-badge {
+    position: absolute;
+    top: 0.75rem;
+    left: 0.75rem;
+    background-color: rgba(14, 30, 58, 0.85);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 0.65rem;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: var(--text-xs);
+    color: var(--brass);
+    font-weight: 500;
+  }
+
+  .card-title {
+    font-size: 1.35rem;
+    line-height: 1.2;
+  }
+
+  .card-desc {
+    font-size: var(--text-xs);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .card-footer {
+    margin-top: auto;
+    padding-top: 1rem;
+    border-top: 1px solid var(--stone);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .card-price {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .price-val {
+    font-family: var(--font-serif);
+    font-size: 1.2rem;
+    color: var(--ink);
+  }
+</style>

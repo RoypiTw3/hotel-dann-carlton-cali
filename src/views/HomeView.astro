@@ -1,0 +1,534 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import BookingBar from '../components/BookingBar.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import Facts from '../components/Facts.astro';
+import RoomCard from '../components/RoomCard.astro';
+import OfferCard from '../components/OfferCard.astro';
+import Cta from '../components/Cta.astro';
+import { rooms } from '../data/rooms';
+import { offers } from '../data/offers';
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+// Pick 4 featured rooms for home
+const featuredRooms = [
+  rooms.find(r => r.slug === 'suite-majestic')!,
+  rooms.find(r => r.slug === 'suite-carlton')!,
+  rooms.find(r => r.slug === 'business-carlton-king')!,
+  rooms.find(r => r.slug === 'standard-dann-cali')!
+].filter(Boolean);
+
+// Pick 3 featured offers for home
+const featuredOffers = offers.slice(0, 3);
+---
+
+<Base 
+  title={t(locale, 'home.hero_title')} 
+  description={t(locale, 'home.hero_sub')}
+  locale={locale}
+  image="/img/fachada.jpg"
+>
+  <!-- Hero Section with Booking Bar -->
+  <Hero 
+    tag={t(locale, 'home.hero_tag')}
+    title={t(locale, 'home.hero_title')}
+    subtitle={t(locale, 'home.hero_sub')}
+    image="/img/fachada.jpg"
+    isHome={true}
+  >
+    <BookingBar locale={locale} variant="hero" />
+  </Hero>
+
+  <!-- Essence / Intro Section -->
+  <section class="section intro-section">
+    <div class="container">
+      <div class="grid-12 intro-grid">
+        <div class="intro-col-title">
+          <SectionIntro 
+            tag={t(locale, 'home.intro_tag')}
+            title={t(locale, 'home.intro_title')}
+          />
+        </div>
+        <div class="intro-col-text">
+          <p class="intro-lead-paragraph">
+            {t(locale, 'home.intro_text')}
+          </p>
+          <div class="intro-perks-row">
+            <div class="perk-pill">
+              <span class="pill-dot"></span>
+              <span>{locale === 'en' ? 'Exclusive Pedestrian Bridge' : 'Puente Peatonal Privado'}</span>
+            </div>
+            <div class="perk-pill">
+              <span class="pill-dot"></span>
+              <span>{locale === 'en' ? '5-Star Hospitality' : 'Categoría 5 Estrellas'}</span>
+            </div>
+            <div class="perk-pill">
+              <span class="pill-dot"></span>
+              <span>{locale === 'en' ? 'Pet Friendly Certified' : 'Certificación Pet Friendly'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Hotel Facts Strip -->
+  <Facts locale={locale} />
+
+  <!-- Featured Accommodations Section -->
+  <section class="section rooms-preview-section">
+    <div class="container">
+      <div class="section-header-flex">
+        <SectionIntro 
+          tag={t(locale, 'home.rooms_tag')}
+          title={t(locale, 'home.rooms_title')}
+          desc={t(locale, 'home.rooms_desc')}
+        />
+        <a href={locale === 'en' ? '/en/habitaciones' : '/habitaciones'} class="link-arrow section-cta-link">
+          <span>{t(locale, 'home.rooms_cta')}</span>
+          &rarr;
+        </a>
+      </div>
+
+      <div class="rooms-grid">
+        {featuredRooms.map((room) => (
+          <RoomCard room={room} locale={locale} variant="card" />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Culinary Preview Section -->
+  <section class="section dining-preview-section">
+    <div class="container">
+      <div class="grid-12 dining-preview-grid">
+        <div class="dining-preview-img-col">
+          <div class="dining-img-box">
+            <img src="/img/platos.jpg" alt="Alta gastronomía en Hotel Dann Carlton Cali" class="dining-img" loading="lazy" />
+            <div class="dining-float-badge">
+              <span class="badge-title">Las Palmas & Bahía Carlton</span>
+              <span class="badge-sub">{locale === 'en' ? 'Open daily for hotel & city guests' : 'Abierto a huéspedes y público'}</span>
+            </div>
+          </div>
+        </div>
+        <div class="dining-preview-text-col">
+          <SectionIntro 
+            tag={t(locale, 'home.dining_tag')}
+            title={t(locale, 'home.dining_title')}
+            desc={t(locale, 'home.dining_desc')}
+          />
+          <div class="dining-highlights-list">
+            <div class="d-highlight-item">
+              <span class="d-item-num font-serif">01</span>
+              <div>
+                <h4 class="d-item-title">Restaurante Las Palmas</h4>
+                <p class="d-item-desc text-slate">{locale === 'en' ? 'Parrilla de autor y pescados del Pacífico junto a la piscina del 4º piso.' : 'Parrilla de autor y pesca del Pacífico junto a la piscina del 4º piso.'}</p>
+              </div>
+            </div>
+            <div class="d-highlight-item">
+              <span class="d-item-num font-serif">02</span>
+              <div>
+                <h4 class="d-item-title">Lobby Bar Bahía Carlton</h4>
+                <p class="d-item-desc text-slate">{locale === 'en' ? 'Coctelería clásica, destilados premium y jazz en el primer piso.' : 'Coctelería clásica, destilados selectos y jazz en el primer piso.'}</p>
+              </div>
+            </div>
+          </div>
+          <a href={locale === 'en' ? '/en/restaurantes' : '/restaurantes'} class="link-arrow mt-4">
+            <span>{t(locale, 'home.dining_cta')}</span>
+            &rarr;
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Offers Section -->
+  <section class="section offers-preview-section">
+    <div class="container">
+      <div class="section-header-flex">
+        <SectionIntro 
+          tag={t(locale, 'home.offers_tag')}
+          title={t(locale, 'home.offers_title')}
+          desc={t(locale, 'home.offers_desc')}
+        />
+        <a href={locale === 'en' ? '/en/ofertas' : '/ofertas'} class="link-arrow section-cta-link">
+          <span>{t(locale, 'home.offers_cta')}</span>
+          &rarr;
+        </a>
+      </div>
+
+      <div class="offers-grid">
+        {featuredOffers.map((offer) => (
+          <OfferCard offer={offer} locale={locale} />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Location & Bridge Section -->
+  <section class="section location-section">
+    <div class="container">
+      <div class="grid-12 location-grid">
+        <div class="location-text-col">
+          <SectionIntro 
+            tag={t(locale, 'home.location_tag')}
+            title={t(locale, 'home.location_title')}
+            desc={t(locale, 'home.location_desc')}
+          />
+          <div class="location-details-box">
+            <p class="location-address">
+              <strong>Carrera 2 # 1-60, Barrio El Peñón</strong><br />
+              Cali, Valle del Cauca · Colombia
+            </p>
+            <p class="location-proximity text-slate">
+              {locale === 'en' 
+                ? '25 min from Alfonso Bonilla Aragón Int. Airport (CLO) · 5 min from Financial District.'
+                : 'A 25 min del Aeropuerto Internacional Alfonso Bonilla Aragón (CLO) · A 5 min del centro financiero.'}
+            </p>
+            <a 
+              href="https://www.google.com/maps/search/?api=1&query=3.45004,-76.54053" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn btn-outline map-btn"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                <circle cx="12" cy="10" r="3"></circle>
+              </svg>
+              <span>{t(locale, 'home.location_map_btn')}</span>
+            </a>
+          </div>
+        </div>
+        <div class="location-img-col">
+          <div class="bridge-img-box">
+            <img src="/img/fachada-9.jpg" alt="Dos torres conectadas por un puente peatonal en Hotel Dann Carlton Cali" class="bridge-img" loading="lazy" />
+            <div class="bridge-caption">
+              <span>{locale === 'en' ? 'Two towers, one private pedestrian bridge.' : 'Dos torres, un puente peatonal privado.'}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Final Call To Action -->
+  <Cta locale={locale} />
+</Base>
+
+<style>
+  /* Intro */
+  .intro-section {
+    background-color: var(--paper);
+  }
+
+  .intro-grid {
+    align-items: center;
+  }
+
+  .intro-col-title {
+    grid-column: span 12;
+  }
+
+  @media (min-width: 992px) {
+    .intro-col-title {
+      grid-column: span 5;
+    }
+  }
+
+  .intro-col-text {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  @media (min-width: 992px) {
+    .intro-col-text {
+      grid-column: span 7;
+      padding-left: 2rem;
+    }
+  }
+
+  .intro-lead-paragraph {
+    font-size: var(--text-md);
+    line-height: 1.7;
+    color: var(--slate);
+  }
+
+  .intro-perks-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .perk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: rgba(230, 227, 220, 0.4);
+    border: 1px solid var(--stone);
+    border-radius: 999px;
+    font-size: var(--text-xs);
+    font-weight: 500;
+    letter-spacing: 0.02em;
+  }
+
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--brass);
+  }
+
+  /* Section Header Flex */
+  .section-header-flex {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2.5rem;
+    gap: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .section-header-flex {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+
+  .section-cta-link {
+    font-weight: 600;
+    margin-bottom: 2.5rem;
+  }
+
+  /* Rooms Grid */
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .rooms-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .rooms-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* Dining Preview */
+  .dining-preview-section {
+    background-color: rgba(230, 227, 220, 0.2);
+    border-top: 1px solid var(--stone);
+    border-bottom: 1px solid var(--stone);
+  }
+
+  .dining-preview-grid {
+    align-items: center;
+  }
+
+  .dining-preview-img-col {
+    grid-column: span 12;
+  }
+
+  @media (min-width: 992px) {
+    .dining-preview-img-col {
+      grid-column: span 7;
+    }
+  }
+
+  .dining-img-box {
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    aspect-ratio: 16 / 11;
+  }
+
+  .dining-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .dining-float-badge {
+    position: absolute;
+    bottom: 1.25rem;
+    left: 1.25rem;
+    background-color: rgba(14, 30, 58, 0.9);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    padding: 0.85rem 1.25rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .badge-title {
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .badge-sub {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.75);
+  }
+
+  .dining-preview-text-col {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 992px) {
+    .dining-preview-text-col {
+      grid-column: span 5;
+      padding-left: 2rem;
+    }
+  }
+
+  .dining-highlights-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .d-highlight-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  .d-item-num {
+    font-size: 1.5rem;
+    color: var(--brass);
+    line-height: 1;
+    min-width: 32px;
+  }
+
+  .d-item-title {
+    font-size: var(--text-base);
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  .d-item-desc {
+    font-size: var(--text-xs);
+    line-height: 1.6;
+  }
+
+  .mt-4 {
+    margin-top: 1rem;
+  }
+
+  /* Offers Grid */
+  .offers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .offers-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  /* Location Section */
+  .location-section {
+    background-color: var(--paper);
+    border-top: 1px solid var(--stone);
+  }
+
+  .location-grid {
+    align-items: center;
+  }
+
+  .location-text-col {
+    grid-column: span 12;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 992px) {
+    .location-text-col {
+      grid-column: span 5;
+    }
+  }
+
+  .location-details-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: rgba(230, 227, 220, 0.35);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+  }
+
+  .location-address {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
+  .location-proximity {
+    font-size: var(--text-xs);
+    line-height: 1.6;
+  }
+
+  .map-btn {
+    align-self: flex-start;
+  }
+
+  .location-img-col {
+    grid-column: span 12;
+  }
+
+  @media (min-width: 992px) {
+    .location-img-col {
+      grid-column: span 7;
+    }
+  }
+
+  .bridge-img-box {
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+  }
+
+  .bridge-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .bridge-caption {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    background-color: rgba(14, 30, 58, 0.85);
+    color: #FFFFFF;
+    font-size: var(--text-xs);
+    letter-spacing: 0.04em;
+    padding: 0.4rem 0.85rem;
+    border-radius: var(--radius-sm);
+  }
+</style>

@@ -1,0 +1,54 @@
+---
+interface Props {
+  tag?: string;
+  title: string;
+  desc?: string;
+  align?: 'left' | 'center';
+}
+
+const { tag, title, desc, align = 'left' } = Astro.props;
+---
+
+<div class={`section-intro ${align === 'center' ? 'text-center' : 'text-left'}`}>
+  {tag && <p class="tagline intro-tag">{tag}</p>}
+  <h2 class="intro-title">{title}</h2>
+  {desc && <p class="intro-desc text-slate">{desc}</p>}
+</div>
+
+<style>
+  .section-intro {
+    margin-bottom: 2.5rem;
+    max-width: 720px;
+  }
+
+  .text-center {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .intro-tag {
+    margin-bottom: 0.75rem;
+  }
+
+  .intro-title {
+    font-size: var(--text-xl);
+    line-height: 1.15;
+    margin-bottom: 0.85rem;
+  }
+
+  .intro-desc {
+    font-size: var(--text-base);
+    line-height: 1.65;
+  }
+
+  @media (max-width: 768px) {
+    .intro-title {
+      font-size: var(--text-lg);
+    }
+  }
+</style>

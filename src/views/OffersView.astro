@@ -1,0 +1,97 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import OfferCard from '../components/OfferCard.astro';
+import Cta from '../components/Cta.astro';
+import { offers } from '../data/offers';
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Base 
+  title={t(locale, 'offers_page.hero_title')} 
+  description={t(locale, 'offers_page.hero_sub')}
+  locale={locale}
+  image="/img/planes-romanticos-3.jpg"
+>
+  <Hero 
+    tag={locale === 'en' ? 'Curated Escapes' : 'Escapadas Exclusivas'}
+    title={t(locale, 'offers_page.hero_title')}
+    subtitle={t(locale, 'offers_page.hero_sub')}
+    image="/img/planes-romanticos-3.jpg"
+  />
+
+  <section class="section offers-list-section">
+    <div class="container">
+      <SectionIntro 
+        tag={locale === 'en' ? 'Special Rates & Experiences' : 'Tarifas & Experiencias Especiales'}
+        title={locale === 'en' ? 'Celebrate Milestones in Silent Luxury' : 'Celebre Momentos Inolvidables en el Mejor Escenario'}
+        desc={locale === 'en'
+          ? 'Each package includes signature romantic amenities, gourmet breakfast, and direct booking guarantee.'
+          : 'Cada plan incluye lencería y detalles románticos de bienvenida, desayuno gourmet y garantía de reserva directa.'}
+      />
+
+      <div class="offers-grid">
+        {offers.map((offer) => (
+          <OfferCard offer={offer} locale={locale} />
+        ))}
+      </div>
+
+      <p class="offers-terms text-slate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="16" x2="12" y2="12"></line>
+          <line x1="12" y1="8" x2="12.01" y2="8"></line>
+        </svg>
+        <span>{t(locale, 'offers_page.terms')}</span>
+      </p>
+    </div>
+  </section>
+
+  <Cta locale={locale} />
+</Base>
+
+<style>
+  .offers-list-section {
+    background-color: var(--paper);
+  }
+
+  .offers-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 768px) {
+    .offers-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .offers-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .offers-terms {
+    margin-top: 3.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+    justify-content: center;
+    text-align: center;
+  }
+
+  .offers-terms svg {
+    color: var(--brass);
+    flex-shrink: 0;
+  }
+</style>

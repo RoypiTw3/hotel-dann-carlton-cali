@@ -1,0 +1,84 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import SectionIntro from '../components/SectionIntro.astro';
+import RoomCard from '../components/RoomCard.astro';
+import BookingBar from '../components/BookingBar.astro';
+import Cta from '../components/Cta.astro';
+import { rooms } from '../data/rooms';
+import { t, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+---
+
+<Base 
+  title={t(locale, 'rooms_page.hero_title')} 
+  description={t(locale, 'rooms_page.hero_sub')}
+  locale={locale}
+  image="/img/suite-carlton7.jpg"
+>
+  <Hero 
+    tag={locale === 'en' ? 'Exclusive Sanctuaries' : 'Alojamientos Exclusivos'}
+    title={t(locale, 'rooms_page.hero_title')}
+    subtitle={t(locale, 'rooms_page.hero_sub')}
+    image="/img/suite-carlton7.jpg"
+  />
+
+  <section class="section rooms-list-section">
+    <div class="container">
+      <SectionIntro 
+        tag={locale === 'en' ? 'Our Collection' : 'Nuestra Colección'}
+        title={locale === 'en' ? '9 Rooms & Suites across Two Iconic Towers' : '9 Habitaciones y Suites en Dos Torres Icónicas'}
+        desc={t(locale, 'rooms_page.amenities_included')}
+      />
+
+      <div class="rooms-rows-container">
+        {rooms.map((room, index) => (
+          <RoomCard 
+            room={room} 
+            locale={locale} 
+            variant="row" 
+            reversed={index % 2 !== 0} 
+          />
+        ))}
+      </div>
+
+      <!-- Standalone Booking Bar -->
+      <div class="rooms-booking-strip">
+        <h3 class="strip-title font-serif">{locale === 'en' ? 'Plan Your Stay' : 'Reserve su Estadía'}</h3>
+        <BookingBar locale={locale} variant="standalone" />
+      </div>
+    </div>
+  </section>
+
+  <Cta locale={locale} />
+</Base>
+
+<style>
+  .rooms-list-section {
+    background-color: var(--paper);
+  }
+
+  .rooms-rows-container {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .rooms-booking-strip {
+    margin-top: 4.5rem;
+    padding: 3rem 2rem;
+    background-color: rgba(230, 227, 220, 0.3);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    text-align: center;
+  }
+
+  .strip-title {
+    font-size: var(--text-lg);
+    margin-bottom: 0.5rem;
+  }
+</style>

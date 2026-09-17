@@ -1,0 +1,184 @@
+---
+import type { DiningVenue } from '../data/dining';
+import type { Locale } from '../i18n/utils';
+
+interface Props {
+  venue: DiningVenue;
+  locale: Locale;
+  reversed?: boolean;
+}
+
+const { venue, locale, reversed = false } = Astro.props;
+---
+
+<article class={`dining-feature ${reversed ? 'is-reversed' : ''}`}>
+  <!-- Image Column -->
+  <div class="dining-image-col">
+    <div class="dining-image-wrap">
+      <img src={venue.image} alt={venue.name} class="dining-photo" loading="lazy" />
+      <span class="dining-location-badge">{venue.location[locale]}</span>
+    </div>
+  </div>
+
+  <!-- Text Column -->
+  <div class="dining-info-col">
+    <div class="dining-header">
+      <p class="tagline dining-tag">{venue.tagline[locale]}</p>
+      <h3 class="dining-title font-serif">{venue.name}</h3>
+      <div class="dining-hours text-slate">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>{venue.hours[locale]}</span>
+      </div>
+    </div>
+
+    <p class="dining-desc text-slate">{venue.description[locale]}</p>
+
+    <div class="dining-specialties">
+      <h4 class="specialties-title">{locale === 'en' ? 'Signature Specialties' : 'Especialidades de la Casa'}</h4>
+      <ul class="specialties-list text-slate">
+        {venue.specialties[locale].map((spec) => (
+          <li>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="4"></circle>
+            </svg>
+            <span>{spec}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</article>
+
+<style>
+  .dining-feature {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    align-items: center;
+    padding: 3.5rem 0;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  @media (min-width: 992px) {
+    .dining-feature {
+      grid-template-columns: 7fr 5fr;
+      gap: 4rem;
+    }
+
+    .dining-feature.is-reversed .dining-image-col {
+      order: 2;
+    }
+
+    .dining-feature.is-reversed .dining-info-col {
+      order: 1;
+    }
+  }
+
+  .dining-image-wrap {
+    position: relative;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background-color: var(--stone);
+  }
+
+  .dining-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .dining-feature:hover .dining-photo {
+    transform: scale(1.02);
+  }
+
+  .dining-location-badge {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    background-color: rgba(14, 30, 58, 0.88);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: var(--text-xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .dining-info-col {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .dining-tag {
+    margin-bottom: 0.35rem;
+  }
+
+  .dining-title {
+    font-size: var(--text-xl);
+    line-height: 1.15;
+    margin-bottom: 0.5rem;
+  }
+
+  .dining-hours {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: var(--text-xs);
+    font-weight: 500;
+  }
+
+  .dining-hours svg {
+    color: var(--brass);
+  }
+
+  .dining-desc {
+    font-size: var(--text-sm);
+    line-height: 1.7;
+  }
+
+  .dining-specialties {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    background-color: rgba(230, 227, 220, 0.25);
+    padding: 1.25rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--stone);
+  }
+
+  .specialties-title {
+    font-size: var(--text-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--brass);
+  }
+
+  .specialties-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: var(--text-xs);
+  }
+
+  .specialties-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .specialties-list svg {
+    color: var(--brass);
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+</style>

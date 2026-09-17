@@ -1,0 +1,145 @@
+---
+interface Props {
+  tag?: string;
+  title: string;
+  subtitle?: string;
+  image: string;
+  isHome?: boolean;
+}
+
+const { tag, title, subtitle, image, isHome = false } = Astro.props;
+---
+
+<section class={`hero-section ${isHome ? 'hero-home' : 'hero-inner'}`}>
+  <div class="hero-bg-wrapper">
+    <img 
+      src={image} 
+      alt={title} 
+      class="hero-bg-img" 
+      loading="eager" 
+      fetchpriority="high"
+    />
+    <div class="hero-overlay"></div>
+  </div>
+
+  <div class="hero-content container">
+    <div class="hero-text-wrapper">
+      {tag && <p class="hero-tag tagline">{tag}</p>}
+      <h1 class="hero-title">{title}</h1>
+      {subtitle && <p class="hero-subtitle">{subtitle}</p>}
+    </div>
+    <slot />
+  </div>
+</section>
+
+<style>
+  .hero-section {
+    position: relative;
+    width: 100%;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .hero-home {
+    min-height: 100vh;
+    padding-top: 100px;
+    padding-bottom: 4rem;
+  }
+
+  .hero-inner {
+    min-height: 55vh;
+    padding-top: 130px;
+    padding-bottom: 4rem;
+  }
+
+  .hero-bg-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+  }
+
+  .hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.02);
+    transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      180deg,
+      rgba(14, 30, 58, 0.45) 0%,
+      rgba(14, 30, 58, 0.65) 60%,
+      rgba(14, 30, 58, 0.85) 100%
+    );
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .hero-text-wrapper {
+    max-width: 860px;
+  }
+
+  .hero-tag {
+    color: var(--brass-light);
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-title {
+    font-family: var(--font-serif);
+    font-size: var(--text-hero);
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.25rem;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .hero-subtitle {
+    font-size: var(--text-base);
+    line-height: 1.6;
+    max-width: 640px;
+    color: rgba(255, 255, 255, 0.88);
+    font-weight: 400;
+  }
+
+  @media (min-width: 768px) {
+    .hero-subtitle {
+      font-size: var(--text-md);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .hero-home {
+      min-height: 90vh;
+      padding-top: 90px;
+    }
+    
+    .hero-inner {
+      min-height: 45vh;
+      padding-top: 110px;
+    }
+
+    .hero-title {
+      font-size: var(--text-xl);
+    }
+  }
+</style>

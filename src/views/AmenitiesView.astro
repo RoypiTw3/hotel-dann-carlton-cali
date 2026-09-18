@@ -4,7 +4,7 @@ import Hero from '../components/Hero.astro';
 import SectionIntro from '../components/SectionIntro.astro';
 import Cta from '../components/Cta.astro';
 import { amenities } from '../data/amenities';
-import { t, type Locale } from '../i18n/utils';
+import { t, p, type Locale } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -41,7 +41,7 @@ const { locale } = Astro.props;
           <article class={`amenity-card ${index % 2 !== 0 ? 'is-reversed' : ''}`}>
             <div class="amenity-img-col">
               <div class="amenity-img-wrap">
-                <img src={item.image} alt={item.name[locale]} class="amenity-img" loading="lazy" />
+                <img src={p(item.image)} alt={item.name[locale]} class="amenity-img" loading="lazy" />
                 <span class="amenity-floor-badge">{item.floor[locale]}</span>
               </div>
             </div>

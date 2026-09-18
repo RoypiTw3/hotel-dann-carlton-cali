@@ -1,6 +1,6 @@
 ---
 import type { DiningVenue } from '../data/dining';
-import type { Locale } from '../i18n/utils';
+import { p, type Locale } from '../i18n/utils';
 
 interface Props {
   venue: DiningVenue;
@@ -15,7 +15,7 @@ const { venue, locale, reversed = false } = Astro.props;
   <!-- Image Column -->
   <div class="dining-image-col">
     <div class="dining-image-wrap">
-      <img src={venue.image} alt={venue.name} class="dining-photo" loading="lazy" />
+      <img src={p(venue.image)} alt={venue.name} class="dining-photo" loading="lazy" />
       <span class="dining-location-badge">{venue.location[locale]}</span>
     </div>
   </div>

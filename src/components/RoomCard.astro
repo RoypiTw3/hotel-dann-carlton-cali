@@ -1,6 +1,6 @@
 ---
 import type { Room } from '../data/rooms';
-import { t, type Locale } from '../i18n/utils';
+import { t, p, type Locale } from '../i18n/utils';
 
 interface Props {
   room: Room;
@@ -28,7 +28,7 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
     <div class="room-image-col">
       <div class="image-wrapper">
         <img 
-          src={room.image} 
+          src={p(room.image)} 
           alt={room.name[locale]} 
           class="room-photo"
           loading="lazy"
@@ -101,7 +101,7 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
 ) : (
   <article class="room-card">
     <div class="card-image-wrap">
-      <img src={room.image} alt={room.name[locale]} class="card-photo" loading="lazy" />
+      <img src={p(room.image)} alt={room.name[locale]} class="card-photo" loading="lazy" />
       <span class="card-tower-badge">{room.tower[locale]}</span>
     </div>
     <div class="card-body">

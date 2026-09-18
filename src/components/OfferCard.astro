@@ -1,6 +1,6 @@
 ---
 import type { Offer } from '../data/offers';
-import { t, type Locale } from '../i18n/utils';
+import { t, p, type Locale } from '../i18n/utils';
 
 interface Props {
   offer: Offer;
@@ -22,7 +22,7 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
 
 <article class="offer-card">
   <div class="offer-image-wrap">
-    <img src={offer.image} alt={offer.name[locale]} class="offer-photo" loading="lazy" />
+    <img src={p(offer.image)} alt={offer.name[locale]} class="offer-photo" loading="lazy" />
   </div>
   <div class="offer-body">
     <h3 class="offer-title">{offer.name[locale]}</h3>

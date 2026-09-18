@@ -1,7 +1,7 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { localizedPath, type Locale } from '../i18n/utils';
+import { localizedPath, p, type Locale } from '../i18n/utils';
 import '../styles/global.css';
 
 interface Props {
@@ -19,17 +19,17 @@ const {
 } = Astro.props;
 
 const pathname = Astro.url.pathname;
-const siteUrl = 'https://hotelesdanncali.com';
-const canonicalUrl = new URL(pathname, siteUrl).href;
-const esUrl = new URL(localizedPath(pathname, 'es'), siteUrl).href;
-const enUrl = new URL(localizedPath(pathname, 'en'), siteUrl).href;
+const siteOrigin = Astro.site ? Astro.site.origin : 'https://roypitw3.github.io';
+const canonicalUrl = new URL(pathname, siteOrigin).href;
+const esUrl = new URL(localizedPath(pathname, 'es'), siteOrigin).href;
+const enUrl = new URL(localizedPath(pathname, 'en'), siteOrigin).href;
 
 const hotelSchema = {
   "@context": "https://schema.org",
   "@type": "Hotel",
   "name": "Hotel Dann Carlton Cali",
   "description": description,
-  "url": siteUrl,
+  "url": siteOrigin,
   "telephone": "+57 60 2 893 3000",
   "email": "reservas@hotelesdanncali.com.co",
   "address": {
@@ -77,10 +77,10 @@ const hotelSchema = {
     <meta property="og:title" content={`${title} | Hotel Dann Carlton Cali`} />
     <meta property="og:description" content={description} />
     <meta property="og:locale" content={locale === 'es' ? 'es_CO' : 'en_US'} />
-    <meta property="og:image" content={new URL(image, siteUrl).href} />
+    <meta property="og:image" content={new URL(p(image), siteOrigin).href} />
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href={p("/favicon.svg")} />
 
     <!-- Structured Data -->
     <script type="application/ld+json" set:html={JSON.stringify(hotelSchema)} />

@@ -1,5 +1,5 @@
 ---
-import { localizedPath, t, type Locale } from '../i18n/utils';
+import { localizedPath, t, p, type Locale } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -9,16 +9,16 @@ interface Props {
 const { locale, currentPath } = Astro.props;
 
 const navItems = [
-  { href: locale === 'en' ? '/en/habitaciones' : '/habitaciones', label: t(locale, 'nav.rooms') },
-  { href: locale === 'en' ? '/en/amenidades' : '/amenidades', label: t(locale, 'nav.amenities') },
-  { href: locale === 'en' ? '/en/restaurantes' : '/restaurantes', label: t(locale, 'nav.dining') },
-  { href: locale === 'en' ? '/en/spa' : '/spa', label: t(locale, 'nav.spa') },
-  { href: locale === 'en' ? '/en/eventos' : '/eventos', label: t(locale, 'nav.events') },
-  { href: locale === 'en' ? '/en/ofertas' : '/ofertas', label: t(locale, 'nav.offers') },
-  { href: locale === 'en' ? '/en/contacto' : '/contacto', label: t(locale, 'nav.contact') },
+  { href: p(locale === 'en' ? '/en/habitaciones' : '/habitaciones'), label: t(locale, 'nav.rooms') },
+  { href: p(locale === 'en' ? '/en/amenidades' : '/amenidades'), label: t(locale, 'nav.amenities') },
+  { href: p(locale === 'en' ? '/en/restaurantes' : '/restaurantes'), label: t(locale, 'nav.dining') },
+  { href: p(locale === 'en' ? '/en/spa' : '/spa'), label: t(locale, 'nav.spa') },
+  { href: p(locale === 'en' ? '/en/eventos' : '/eventos'), label: t(locale, 'nav.events') },
+  { href: p(locale === 'en' ? '/en/ofertas' : '/ofertas'), label: t(locale, 'nav.offers') },
+  { href: p(locale === 'en' ? '/en/contacto' : '/contacto'), label: t(locale, 'nav.contact') },
 ];
 
-const homePath = locale === 'en' ? '/en' : '/';
+const homePath = p(locale === 'en' ? '/en' : '/');
 const esPath = localizedPath(currentPath, 'es');
 const enPath = localizedPath(currentPath, 'en');
 ---
@@ -26,8 +26,8 @@ const enPath = localizedPath(currentPath, 'en');
 <header id="site-header" class="site-header">
   <div class="header-container container">
     <a href={homePath} class="brand-logo" aria-label="Hotel Dann Carlton Cali">
-      <img src="/scroll-logo.svg" alt="Dann Carlton Cali" class="logo-img logo-dark" width="160" height="42" />
-      <img src="/main-logo-white.svg" alt="Dann Carlton Cali" class="logo-img logo-white" width="160" height="42" />
+      <img src={p('/scroll-logo.svg')} alt="Dann Carlton Cali" class="logo-img logo-dark" width="160" height="42" />
+      <img src={p('/main-logo-white.svg')} alt="Dann Carlton Cali" class="logo-img logo-white" width="160" height="42" />
     </a>
 
     <!-- Desktop Navigation -->

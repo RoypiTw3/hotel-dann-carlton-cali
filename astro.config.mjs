@@ -4,7 +4,8 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://hotelesdanncali.com',
+  site: 'https://roypitw3.github.io',
+  base: '/hotel-dann-carlton-cali',
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],

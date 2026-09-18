@@ -1,4 +1,6 @@
 ---
+import { p } from '../i18n/utils';
+
 interface Props {
   tag?: string;
   title: string;
@@ -13,7 +15,7 @@ const { tag, title, subtitle, image, isHome = false } = Astro.props;
 <section class={`hero-section ${isHome ? 'hero-home' : 'hero-inner'}`}>
   <div class="hero-bg-wrapper">
     <img 
-      src={image} 
+      src={p(image)} 
       alt={title} 
       class="hero-bg-img" 
       loading="eager" 

@@ -1,6 +1,6 @@
 ---
 import type { Venue } from '../data/venues';
-import type { Locale } from '../i18n/utils';
+import { p, type Locale } from '../i18n/utils';
 
 interface Props {
   venue: Venue;
@@ -12,7 +12,7 @@ const { venue, locale } = Astro.props;
 
 <div class="venue-row">
   <div class="venue-thumb-col">
-    <img src={venue.image} alt={venue.name} class="venue-thumb" loading="lazy" />
+    <img src={p(venue.image)} alt={venue.name} class="venue-thumb" loading="lazy" />
   </div>
   <div class="venue-main-col">
     <div class="venue-meta">

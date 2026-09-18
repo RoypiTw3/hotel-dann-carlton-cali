@@ -5,8 +5,22 @@ export type Locale = 'es' | 'en';
 
 const translations = { es, en };
 
+const BASE = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+
+export function p(path: string = ''): string {
+  if (!path) return BASE ? `${BASE}/` : '/';
+  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('mailto:') || path.startsWith('tel:') || path.startsWith('#')) {
+    return path;
+  }
+  const clean = path.startsWith('/') ? path : `/${path}`;
+  return `${BASE}${clean}`;
+}
+
 export function getLocale(url: URL | string): Locale {
-  const pathname = typeof url === 'string' ? url : url.pathname;
+  let pathname = typeof url === 'string' ? url : url.pathname;
+  if (BASE && pathname.startsWith(BASE)) {
+    pathname = pathname.slice(BASE.length);
+  }
   if (pathname.startsWith('/en/') || pathname === '/en') {
     return 'en';
   }
@@ -52,8 +66,12 @@ export function t(locale: Locale, key: string, params?: Record<string, string | 
 }
 
 export function localizedPath(pathname: string, targetLocale: Locale): string {
-  // Strip leading locale if present
   let cleanPath = pathname;
+  if (BASE && cleanPath.startsWith(BASE)) {
+    cleanPath = cleanPath.slice(BASE.length);
+  }
+
+  // Strip leading locale if present
   if (cleanPath.startsWith('/en/')) {
     cleanPath = cleanPath.replace(/^\/en/, '');
   } else if (cleanPath === '/en') {
@@ -65,9 +83,10 @@ export function localizedPath(pathname: string, targetLocale: Locale): string {
     cleanPath = '/' + cleanPath;
   }
 
+  let finalPath = cleanPath;
   if (targetLocale === 'en') {
-    return cleanPath === '/' ? '/en' : `/en${cleanPath}`;
+    finalPath = cleanPath === '/' ? '/en' : `/en${cleanPath}`;
   }
 
-  return cleanPath;
+  return p(finalPath);
 }

@@ -173,7 +173,13 @@ const enPath = localizedPath(currentPath, 'en');
 
   .site-header:not(.is-scrolled) .btn-header {
     background-color: #FFFFFF;
-    color: var(--ink);
+    color: #0E1E3A;
+    font-weight: 600;
+  }
+
+  .site-header:not(.is-scrolled) .btn-header:hover {
+    background-color: #FBFAF7;
+    color: #0E1E3A;
   }
 
   .site-header:not(.is-scrolled) .line {
@@ -218,12 +224,18 @@ const enPath = localizedPath(currentPath, 'en');
   }
 
   .site-header.is-scrolled .btn-header {
-    background-color: var(--ink);
-    color: var(--paper);
+    background-color: #0E1E3A;
+    color: #FBFAF7;
+    font-weight: 600;
+  }
+
+  .site-header.is-scrolled .btn-header:hover {
+    background-color: #1A2F54;
+    color: #FFFFFF;
   }
 
   .site-header.is-scrolled .line {
-    background-color: var(--ink);
+    background-color: #0E1E3A;
   }
 
   .header-container {
@@ -434,6 +446,9 @@ const enPath = localizedPath(currentPath, 'en');
   .mobile-book-btn {
     width: 100%;
     padding: 0.85rem;
+    background-color: #0E1E3A !important;
+    color: #FBFAF7 !important;
+    font-weight: 600;
   }
 
   /* When drawer is open, keep header icons readable and morph hamburger to X */

@@ -14,6 +14,7 @@
   --slate: #5F6675;
   --brass: #A98A5B;
   --brass-light: #C4AB80;
+  --brass-dark: #7D5F2D;
 
   /* Typography Scale */
   --font-serif: 'Instrument Serif', Georgia, serif;
@@ -33,18 +34,6 @@
   --radius-sm: 2px;
   --radius-md: 4px;
   --transition-smooth: 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ink: #F0EDE6;
-    --paper: #090F1A;
-    --paper-rgb: 9, 15, 26;
-    --stone: #1E2838;
-    --slate: #9BA4B5;
-    --brass: #C5A876;
-    --brass-light: #DFC499;
-  }
 }
 
 /* Reset & Base */
@@ -113,7 +102,7 @@ h1, h2, h3, h4, .font-serif {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--brass);
+  color: var(--brass-dark);
 }
 
 .text-slate {
@@ -121,7 +110,7 @@ h1, h2, h3, h4, .font-serif {
 }
 
 .text-brass {
-  color: var(--brass);
+  color: var(--brass-dark);
 }
 
 /* Layout Utilities */
@@ -148,7 +137,7 @@ h1, h2, h3, h4, .font-serif {
   gap: 0.5rem;
   padding: 0.75rem 1.5rem;
   font-size: var(--text-sm);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: 0.04em;
   text-transform: uppercase;
   border-radius: var(--radius-sm);
@@ -164,7 +153,8 @@ h1, h2, h3, h4, .font-serif {
 }
 
 .btn-primary:hover {
-  opacity: 0.92;
+  background-color: #1A2F54;
+  color: #FFFFFF;
   transform: translateY(-1px);
 }
 
@@ -176,15 +166,19 @@ h1, h2, h3, h4, .font-serif {
 
 .btn-outline:hover {
   border-color: var(--ink);
+  background-color: var(--ink);
+  color: var(--paper);
 }
 
 .btn-brass {
   background-color: var(--brass);
-  color: #FFFFFF;
+  color: #0E1E3A;
+  font-weight: 600;
 }
 
 .btn-brass:hover {
   background-color: var(--brass-light);
+  color: #0E1E3A;
 }
 
 .link-arrow {
@@ -192,8 +186,8 @@ h1, h2, h3, h4, .font-serif {
   align-items: center;
   gap: 0.35rem;
   font-size: var(--text-sm);
-  font-weight: 500;
-  color: var(--brass);
+  font-weight: 600;
+  color: var(--brass-dark);
   letter-spacing: 0.02em;
   transition: gap var(--transition-smooth), color var(--transition-smooth);
 }

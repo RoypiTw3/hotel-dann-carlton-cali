@@ -37,8 +37,8 @@ const bookingUrl = p(locale === 'en' ? '/en/reservar' : '/reservar');
   }
 
   .cta-card {
-    background-color: var(--ink);
-    color: var(--paper);
+    background-color: #0E1E3A !important;
+    color: #FFFFFF !important;
     border-radius: var(--radius-sm);
     padding: 3.5rem 2.5rem;
     display: grid;
@@ -47,6 +47,7 @@ const bookingUrl = p(locale === 'en' ? '/en/reservar' : '/reservar');
     align-items: center;
     position: relative;
     overflow: hidden;
+    box-shadow: 0 16px 48px rgba(14, 30, 58, 0.2);
   }
 
   @media (min-width: 992px) {
@@ -63,7 +64,7 @@ const bookingUrl = p(locale === 'en' ? '/en/reservar' : '/reservar');
     right: -20%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(169, 138, 91, 0.15) 0%, rgba(14, 30, 58, 0) 70%);
+    background: radial-gradient(circle, rgba(196, 171, 128, 0.15) 0%, rgba(14, 30, 58, 0) 70%);
     pointer-events: none;
   }
 
@@ -75,18 +76,20 @@ const bookingUrl = p(locale === 'en' ? '/en/reservar' : '/reservar');
   }
 
   .cta-tag {
-    color: var(--brass-light);
+    color: #C4AB80 !important;
+    font-weight: 600;
+    letter-spacing: 0.12em;
   }
 
   .cta-title {
     font-size: var(--text-xl);
     line-height: 1.12;
-    color: #FFFFFF;
+    color: #FFFFFF !important;
   }
 
   .cta-desc {
     font-size: var(--text-base);
-    color: rgba(255, 255, 255, 0.82);
+    color: #E6E3DC !important;
     line-height: 1.6;
   }
 
@@ -106,13 +109,23 @@ const bookingUrl = p(locale === 'en' ? '/en/reservar' : '/reservar');
   .cta-btn {
     padding: 0.9rem 2rem;
     font-size: var(--text-sm);
-    font-weight: 600;
+    font-weight: 700;
     letter-spacing: 0.05em;
+    background-color: #C4AB80 !important;
+    color: #0E1E3A !important;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+  }
+
+  .cta-btn:hover {
+    background-color: #FFFFFF !important;
+    color: #0E1E3A !important;
+    transform: translateY(-2px);
   }
 
   .cta-hint {
     font-size: var(--text-xs);
-    color: rgba(255, 255, 255, 0.65);
+    color: #C4AB80 !important;
     max-width: 320px;
     text-align: left;
   }

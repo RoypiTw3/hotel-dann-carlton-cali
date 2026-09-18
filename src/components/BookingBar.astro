@@ -1,5 +1,5 @@
 ---
-import { t, type Locale } from '../i18n/utils';
+import { t, p, type Locale } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -18,23 +18,16 @@ nextDay.setDate(now.getDate() + 3);
 const formatDateForInput = (d: Date) => d.toISOString().split('T')[0];
 const defaultDateIn = formatDateForInput(tomorrow);
 const defaultDateOut = formatDateForInput(nextDay);
+const targetAction = p(locale === 'en' ? '/en/reservar' : '/reservar');
 ---
 
 <div class={`booking-bar-wrapper ${variant === 'hero' ? 'is-hero' : 'is-standalone'}`}>
   <form 
     id="booking-form"
-    action="https://reservations.travelclick.com/9878657" 
+    action={targetAction} 
     method="GET" 
-    target="_blank" 
-    rel="noopener noreferrer"
     class="booking-form"
   >
-    <input type="hidden" name="HotelID" value="9878657" />
-    <input type="hidden" name="LanguageID" value={locale === 'en' ? '1' : '2'} />
-    <input type="hidden" name="Rooms" value="1" />
-    <!-- Hidden inputs for TravelClick format MM/DD/YYYY -->
-    <input type="hidden" id="DateIn" name="DateIn" value="" />
-    <input type="hidden" id="DateOut" name="DateOut" value="" />
 
     <!-- Arrival -->
     <div class="booking-field">
@@ -42,6 +35,7 @@ const defaultDateOut = formatDateForInput(nextDay);
       <input 
         type="date" 
         id="checkin-date" 
+        name="checkin"
         class="field-input" 
         value={defaultDateIn}
         min={formatDateForInput(now)}
@@ -55,6 +49,7 @@ const defaultDateOut = formatDateForInput(nextDay);
       <input 
         type="date" 
         id="checkout-date" 
+        name="checkout"
         class="field-input" 
         value={defaultDateOut}
         min={defaultDateIn}
@@ -65,7 +60,7 @@ const defaultDateOut = formatDateForInput(nextDay);
     <!-- Guests Selection -->
     <div class="booking-field">
       <label for="guests-count" class="field-label">{t(locale, 'booking.guests')}</label>
-      <select id="guests-count" name="Adults" class="field-select">
+      <select id="guests-count" name="adults" class="field-select">
         <option value="1">{t(locale, 'booking.guest_single')}</option>
         <option value="2" selected>{t(locale, 'booking.guest_double')}</option>
         <option value="3">{t(locale, 'booking.guest_multiple', { count: 3 })}</option>
@@ -79,7 +74,7 @@ const defaultDateOut = formatDateForInput(nextDay);
       <input 
         type="text" 
         id="promocode" 
-        name="RatePlanId" 
+        name="promo" 
         placeholder={locale === 'en' ? 'Optional' : 'Opcional'}
         class="field-input promo-input" 
       />
@@ -220,14 +215,6 @@ const defaultDateOut = formatDateForInput(nextDay);
 
     const checkinInput = document.getElementById('checkin-date') as HTMLInputElement;
     const checkoutInput = document.getElementById('checkout-date') as HTMLInputElement;
-    const hiddenDateIn = document.getElementById('DateIn') as HTMLInputElement;
-    const hiddenDateOut = document.getElementById('DateOut') as HTMLInputElement;
-
-    const formatToTravelClick = (isoString: string) => {
-      if (!isoString) return '';
-      const [year, month, day] = isoString.split('-');
-      return `${month}/${day}/${year}`;
-    };
 
     const syncDates = () => {
       if (checkinInput && checkoutInput) {
@@ -238,21 +225,11 @@ const defaultDateOut = formatDateForInput(nextDay);
           checkoutInput.value = next.toISOString().split('T')[0];
         }
       }
-      if (hiddenDateIn && checkinInput) {
-        hiddenDateIn.value = formatToTravelClick(checkinInput.value);
-      }
-      if (hiddenDateOut && checkoutInput) {
-        hiddenDateOut.value = formatToTravelClick(checkoutInput.value);
-      }
     };
 
     checkinInput?.addEventListener('change', syncDates);
     checkoutInput?.addEventListener('change', syncDates);
     syncDates();
-
-    form.addEventListener('submit', () => {
-      syncDates();
-    });
   }
 
   document.addEventListener('DOMContentLoaded', setupBookingForm);

@@ -94,13 +94,11 @@ const homePath = p(locale === 'en' ? '/en' : '/');
         &copy; {currentYear} {t(locale, 'footer.rights')}
       </p>
       <a 
-        href={`https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}`}
-        target="_blank"
-        rel="noopener noreferrer"
+        href={p(locale === 'en' ? '/en/reservar' : '/reservar')}
         class="direct-guarantee-badge"
       >
         <span class="badge-dot"></span>
-        {locale === 'en' ? 'Official Booking Engine (TravelClick)' : 'Motor Oficial de Reservas (TravelClick)'}
+        {locale === 'en' ? 'Official Dann Direct Booking Engine' : 'Motor Oficial de Reservas Dann Carlton'}
       </a>
     </div>
   </div>

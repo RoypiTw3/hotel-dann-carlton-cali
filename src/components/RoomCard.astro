@@ -19,7 +19,7 @@ const formatCOP = (num: number) => {
   }).format(num);
 };
 
-const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}&roomtypeid=${room.roomtypeid}`;
+const bookingUrl = p(locale === 'en' ? `/en/reservar?room=${room.slug}` : `/reservar?room=${room.slug}`);
 ---
 
 {variant === 'row' ? (
@@ -85,8 +85,6 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
 
         <a 
           href={bookingUrl} 
-          target="_blank" 
-          rel="noopener noreferrer" 
           class="btn btn-primary room-book-btn"
         >
           <span>{t(locale, 'rooms_page.book_room')}</span>
@@ -117,7 +115,7 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
           <span class="price-prefix">{t(locale, 'rooms_page.from')}</span>
           <span class="price-val">{formatCOP(room.priceCOP)}</span>
         </div>
-        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="link-arrow">
+        <a href={bookingUrl} class="link-arrow">
           <span>{t(locale, 'nav.book')}</span>
           &rarr;
         </a>

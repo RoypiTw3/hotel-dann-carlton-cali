@@ -1,12 +1,12 @@
 ---
-import { t, type Locale } from '../i18n/utils';
+import { t, p, type Locale } from '../i18n/utils';
 
 interface Props {
   locale: Locale;
 }
 
 const { locale } = Astro.props;
-const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}`;
+const bookingUrl = p(locale === 'en' ? '/en/reservar' : '/reservar');
 ---
 
 <section class="cta-section">
@@ -18,7 +18,7 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
         <p class="cta-desc">{t(locale, 'cta.desc')}</p>
       </div>
       <div class="cta-action">
-        <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="btn btn-brass cta-btn">
+        <a href={bookingUrl} class="btn btn-brass cta-btn">
           <span>{t(locale, 'cta.btn')}</span>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="5" y1="12" x2="19" y2="12"></line>

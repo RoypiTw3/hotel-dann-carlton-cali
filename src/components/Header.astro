@@ -67,9 +67,7 @@ const enPath = localizedPath(currentPath, 'en');
       </div>
 
       <a 
-        href={`https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}`} 
-        target="_blank" 
-        rel="noopener noreferrer" 
+        href={p(locale === 'en' ? '/en/reservar' : '/reservar')} 
         class="btn btn-primary btn-header"
       >
         {t(locale, 'nav.book')}
@@ -117,9 +115,7 @@ const enPath = localizedPath(currentPath, 'en');
           <a href={enPath} class={`lang-btn ${locale === 'en' ? 'active' : ''}`}>English</a>
         </div>
         <a 
-          href={`https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}`} 
-          target="_blank" 
-          rel="noopener noreferrer" 
+          href={p(locale === 'en' ? '/en/reservar' : '/reservar')} 
           class="btn btn-primary mobile-book-btn"
         >
           {t(locale, 'nav.book')}

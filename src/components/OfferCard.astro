@@ -17,7 +17,7 @@ const formatCOP = (num: number) => {
   }).format(num);
 };
 
-const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${locale === 'en' ? '1' : '2'}&RatePlanId=${offer.ratePlanId}`;
+const bookingUrl = p(locale === 'en' ? `/en/reservar?plan=${offer.ratePlanId}` : `/reservar?plan=${offer.ratePlanId}`);
 ---
 
 <article class="offer-card">
@@ -48,7 +48,7 @@ const bookingUrl = `https://reservations.travelclick.com/9878657?languageid=${lo
         <span class="price-amount font-serif">{formatCOP(offer.priceCOP)}</span>
       </div>
 
-      <a href={bookingUrl} target="_blank" rel="noopener noreferrer" class="btn btn-primary offer-btn">
+      <a href={bookingUrl} class="btn btn-primary offer-btn">
         <span>{t(locale, 'offers_page.book_offer')}</span>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="5" y1="12" x2="19" y2="12"></line>

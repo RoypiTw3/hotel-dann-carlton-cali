@@ -1,0 +1,1577 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import { rooms } from '../data/rooms';
+import { t, p, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+
+// Formatting helper
+const formatCOP = (num: number) => {
+  return new Intl.NumberFormat('es-CO', {
+    style: 'currency',
+    currency: 'COP',
+    maximumFractionDigits: 0
+  }).format(num);
+};
+---
+
+<Base 
+  title={t(locale, 'booking_page.hero_title')} 
+  description={t(locale, 'booking_page.hero_sub')}
+  locale={locale}
+  image="/img/fachada.jpg"
+>
+  <!-- Hero Section -->
+  <Hero 
+    tag={t(locale, 'booking_page.hero_tag')}
+    title={t(locale, 'booking_page.hero_title')}
+    subtitle={t(locale, 'booking_page.hero_sub')}
+    image="/img/fachada.jpg"
+  />
+
+  <section class="booking-engine-section" id="booking-engine">
+    <div class="container">
+      
+      <!-- Top Trust Guarantee Strip -->
+      <div class="booking-guarantees-strip">
+        <div class="guarantee-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          <div>
+            <strong>{locale === 'en' ? 'Direct Rate Guarantee' : 'Mejor Tarifa Garantizada'}</strong>
+            <p>{locale === 'en' ? 'No intermediary commissions' : 'Sin comisiones intermedias'}</p>
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+            <line x1="16" y1="2" x2="16" y2="6"></line>
+            <line x1="8" y1="2" x2="8" y2="6"></line>
+            <line x1="3" y1="10" x2="21" y2="10"></line>
+          </svg>
+          <div>
+            <strong>{locale === 'en' ? 'Flexible Cancellation' : 'Cancelación Flexible'}</strong>
+            <p>{locale === 'en' ? 'Up to 24h before arrival' : 'Hasta 24 horas antes'}</p>
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"></path>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path>
+            <line x1="6" y1="1" x2="6" y2="4"></line>
+            <line x1="10" y1="1" x2="10" y2="4"></line>
+            <line x1="14" y1="1" x2="14" y2="4"></line>
+          </svg>
+          <div>
+            <strong>{locale === 'en' ? 'Buffet Breakfast & Wet Areas' : 'Desayuno Buffet & Zonas Húmedas'}</strong>
+            <p>{locale === 'en' ? 'Included in your reservation' : 'Incluido en su reserva directa'}</p>
+          </div>
+        </div>
+        <div class="guarantee-item">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <div>
+            <strong>{locale === 'en' ? 'Direct 24/7 Concierge' : 'Atención Inmediata 24/7'}</strong>
+            <p>{locale === 'en' ? 'Personalized WhatsApp assistance' : 'WhatsApp oficial con recepción'}</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Control Bar: Dates, Guests & Filters -->
+      <div class="booking-control-card">
+        <div class="control-grid">
+          <!-- Check-in -->
+          <div class="control-group">
+            <label for="engine-checkin" class="control-label">{t(locale, 'booking.checkin')}</label>
+            <input type="date" id="engine-checkin" class="control-input" />
+          </div>
+
+          <!-- Check-out -->
+          <div class="control-group">
+            <label for="engine-checkout" class="control-label">{t(locale, 'booking.checkout')}</label>
+            <input type="date" id="engine-checkout" class="control-input" />
+          </div>
+
+          <!-- Duration Pill -->
+          <div class="control-group duration-pill-group">
+            <span class="control-label">{locale === 'en' ? 'Duration' : 'Duración'}</span>
+            <div class="duration-display">
+              <span id="nights-count-text">1 noche</span>
+            </div>
+          </div>
+
+          <!-- Guests -->
+          <div class="control-group">
+            <label for="engine-adults" class="control-label">{t(locale, 'booking.guests')}</label>
+            <select id="engine-adults" class="control-select">
+              <option value="1">{t(locale, 'booking.guest_single')}</option>
+              <option value="2" selected>{t(locale, 'booking.guest_double')}</option>
+              <option value="3">{t(locale, 'booking.guest_multiple', { count: 3 })}</option>
+              <option value="4">{t(locale, 'booking.guest_multiple', { count: 4 })}</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Tower Filter Pills -->
+        <div class="tower-filters-row">
+          <span class="filter-caption">{locale === 'en' ? 'Filter by Tower:' : 'Filtrar por Torre:'}</span>
+          <div class="filter-buttons">
+            <button type="button" class="filter-btn active" data-tower="all">
+              {t(locale, 'booking_page.filter_all')}
+            </button>
+            <button type="button" class="filter-btn" data-tower="Torre Carlton">
+              {t(locale, 'booking_page.filter_carlton')} (5★)
+            </button>
+            <button type="button" class="filter-btn" data-tower="Torre Dann Cali">
+              {t(locale, 'booking_page.filter_dann')} (4★ Sup)
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Room Selection Grid -->
+      <div class="rooms-inventory-list" id="rooms-list">
+        {rooms.map((room) => {
+          const nonRefPrice = Math.round(room.priceCOP * 0.90);
+          return (
+            <div 
+              class="room-booking-card" 
+              data-slug={room.slug}
+              data-tower={room.tower.es}
+              data-base-price={room.priceCOP}
+              data-nonref-price={nonRefPrice}
+              data-room-name={room.name[locale]}
+              data-room-image={p(room.image)}
+              id={`room-card-${room.slug}`}
+            >
+              <!-- Image Col -->
+              <div class="room-media-box">
+                <img 
+                  src={p(room.image)} 
+                  alt={room.name[locale]} 
+                  class="room-engine-photo" 
+                  loading="lazy" 
+                />
+                <span class="room-tower-tag">{room.tower[locale]}</span>
+              </div>
+
+              <!-- Main Info Col -->
+              <div class="room-main-info">
+                <div class="room-title-strip">
+                  <h3 class="room-title-name font-serif">{room.name[locale]}</h3>
+                  <div class="room-specs-pills">
+                    <span class="spec-pill">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"></path>
+                      </svg>
+                      {room.bed[locale]}
+                    </span>
+                    <span class="spec-pill">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                      </svg>
+                      {room.capacity[locale]}
+                    </span>
+                    <span class="spec-pill">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                      </svg>
+                      {room.area}
+                    </span>
+                  </div>
+                </div>
+
+                <p class="room-summary-text text-slate">{room.description[locale]}</p>
+
+                <!-- Features Bullets -->
+                <ul class="room-perks-bullets text-slate">
+                  {room.features[locale].map((feat) => (
+                    <li>
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <span>{feat}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <!-- Rate Options -->
+                <div class="room-rates-options">
+                  
+                  <!-- Option 1: Flexible Rate -->
+                  <div class="rate-option-card is-recommended">
+                    <div class="rate-badge-popular">{locale === 'en' ? 'Most Popular' : 'Más Elegida'}</div>
+                    <div class="rate-header">
+                      <h4 class="rate-name">{t(locale, 'booking_page.plan_flexible')}</h4>
+                      <p class="rate-sub">{t(locale, 'booking_page.plan_flexible_desc')}</p>
+                    </div>
+                    <div class="rate-pricing">
+                      <div class="nightly-rate">
+                        <span class="price-val font-serif">{formatCOP(room.priceCOP)}</span>
+                        <span class="price-term">/ {t(locale, 'booking_page.night')}</span>
+                      </div>
+                      <div class="total-rate-hint" data-plan="flexible" data-base={room.priceCOP}>
+                        {t(locale, 'booking_page.total_stay')}: <strong class="total-dyn-val">{formatCOP(room.priceCOP)}</strong>
+                      </div>
+                    </div>
+                    <button 
+                      type="button" 
+                      class="btn btn-primary select-plan-btn"
+                      data-room-slug={room.slug}
+                      data-plan-type="flexible"
+                      data-plan-name={t(locale, 'booking_page.plan_flexible')}
+                      data-nightly={room.priceCOP}
+                    >
+                      <span>{t(locale, 'booking_page.select_room')}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+
+                  <!-- Option 2: Non-Refundable Rate (-10%) -->
+                  <div class="rate-option-card">
+                    <div class="rate-discount-tag">-10% Directo</div>
+                    <div class="rate-header">
+                      <h4 class="rate-name">{t(locale, 'booking_page.plan_nonref')}</h4>
+                      <p class="rate-sub">{t(locale, 'booking_page.plan_nonref_desc')}</p>
+                    </div>
+                    <div class="rate-pricing">
+                      <div class="nightly-rate">
+                        <span class="price-val font-serif">{formatCOP(nonRefPrice)}</span>
+                        <span class="price-term">/ {t(locale, 'booking_page.night')}</span>
+                      </div>
+                      <div class="total-rate-hint" data-plan="nonref" data-base={nonRefPrice}>
+                        {t(locale, 'booking_page.total_stay')}: <strong class="total-dyn-val">{formatCOP(nonRefPrice)}</strong>
+                      </div>
+                    </div>
+                    <button 
+                      type="button" 
+                      class="btn btn-outline select-plan-btn"
+                      data-room-slug={room.slug}
+                      data-plan-type="nonref"
+                      data-plan-name={t(locale, 'booking_page.plan_nonref')}
+                      data-nightly={nonRefPrice}
+                    >
+                      <span>{t(locale, 'booking_page.select_room')}</span>
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Reservation Completion Drawer / Modal -->
+  <div id="booking-drawer" class="booking-drawer-backdrop" aria-hidden="true">
+    <div class="booking-drawer-panel" role="dialog" aria-modal="true">
+      
+      <!-- Drawer Header -->
+      <div class="drawer-header">
+        <div class="drawer-header-text">
+          <span id="drawer-step-tag" class="drawer-step-tag" data-orig={t(locale, 'booking_page.step_guest')}>{t(locale, 'booking_page.step_guest')}</span>
+          <h3 id="drawer-title" class="drawer-title font-serif" data-orig={t(locale, 'booking_page.guest_title')}>{t(locale, 'booking_page.guest_title')}</h3>
+        </div>
+        <button type="button" id="close-drawer-btn" class="drawer-close-btn" aria-label="Cerrar">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Drawer Content: Steps or Form -->
+      <div class="drawer-body">
+        
+        <!-- Form Mode -->
+        <div id="drawer-form-view">
+          
+          <!-- Summary Card -->
+          <div class="reservation-summary-card">
+            <div class="summary-room-header">
+              <img id="summary-room-img" src="/img/fachada.jpg" alt="Habitacion" class="summary-room-thumb" />
+              <div class="summary-room-meta">
+                <span id="summary-room-tower" class="summary-tower-tag">Torre Carlton</span>
+                <h4 id="summary-room-name" class="summary-room-title">Suite Majestic</h4>
+                <p id="summary-plan-name" class="summary-plan-title text-slate">Tarifa Flexible con Desayuno</p>
+              </div>
+            </div>
+
+            <div class="summary-details-grid">
+              <div class="summary-detail-item">
+                <span class="detail-label">{locale === 'en' ? 'Check-in' : 'Llegada'}</span>
+                <strong id="summary-checkin-val">2026-09-20</strong>
+              </div>
+              <div class="summary-detail-item">
+                <span class="detail-label">{locale === 'en' ? 'Check-out' : 'Salida'}</span>
+                <strong id="summary-checkout-val">2026-09-22</strong>
+              </div>
+              <div class="summary-detail-item">
+                <span class="detail-label">{locale === 'en' ? 'Duration' : 'Estadía'}</span>
+                <strong id="summary-nights-val">2 noches</strong>
+              </div>
+              <div class="summary-detail-item">
+                <span class="detail-label">{locale === 'en' ? 'Guests' : 'Huéspedes'}</span>
+                <strong id="summary-guests-val">2 Adultos</strong>
+              </div>
+            </div>
+
+            <div class="summary-price-breakdown">
+              <div class="price-row">
+                <span class="text-slate">{locale === 'en' ? 'Nightly Average:' : 'Promedio por noche:'}</span>
+                <span id="summary-nightly-val">$0</span>
+              </div>
+              <div class="price-row">
+                <span class="text-slate">{locale === 'en' ? 'Taxes & Hotel Insurance:' : 'Impuestos & Seguro Hotelero:'}</span>
+                <span class="badge-included">{locale === 'en' ? 'Included' : 'Incluidos'}</span>
+              </div>
+              <div class="price-row total-row">
+                <strong>{locale === 'en' ? 'Total to Confirm:' : 'Total Estadía:'}</strong>
+                <strong id="summary-total-val" class="font-serif summary-total-number">$0</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Guest Input Form -->
+          <form id="confirm-reservation-form" class="guest-inputs-form">
+            <div class="form-group">
+              <label for="guest-name" class="form-label">{t(locale, 'booking_page.guest_name')} *</label>
+              <input type="text" id="guest-name" class="form-control" required placeholder="Ej. Carlos Mendoza" />
+            </div>
+
+            <div class="form-row-2">
+              <div class="form-group">
+                <label for="guest-email" class="form-label">{t(locale, 'booking_page.guest_email')} *</label>
+                <input type="email" id="guest-email" class="form-control" required placeholder="carlos@empresa.com" />
+              </div>
+              <div class="form-group">
+                <label for="guest-phone" class="form-label">{t(locale, 'booking_page.guest_phone')} *</label>
+                <input type="tel" id="guest-phone" class="form-control" required placeholder="+57 300 123 4567" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="guest-id" class="form-label">{t(locale, 'booking_page.guest_id')} *</label>
+              <input type="text" id="guest-id" class="form-control" required placeholder="CC / Pasaporte" />
+            </div>
+
+            <div class="form-group">
+              <label for="guest-notes" class="form-label">{t(locale, 'booking_page.guest_notes')}</label>
+              <textarea id="guest-notes" class="form-control form-textarea" rows="2" placeholder={locale === 'en' ? 'Early check-in, high floor, anniversary setup...' : 'Llegada tardía, piso alto, decoración especial...'}></textarea>
+            </div>
+
+            <!-- Guarantee Notice -->
+            <div class="direct-benefits-box">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              </svg>
+              <div>
+                <strong>{t(locale, 'booking_page.guarantee_title')}</strong>
+                <p class="text-slate">{t(locale, 'booking_page.guarantee_desc')}</p>
+              </div>
+            </div>
+
+            <button type="submit" id="submit-booking-btn" class="btn btn-primary btn-submit-reservation">
+              <span>{t(locale, 'booking_page.confirm_btn')}</span>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </button>
+          </form>
+
+        </div>
+
+        <!-- Success Confirmation View -->
+        <div id="drawer-success-view" class="drawer-success-view" style="display: none;">
+          <div class="success-icon-wrap">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </div>
+
+          <span class="success-tagline">{t(locale, 'booking_page.success_title')}</span>
+          <h3 class="success-room-title font-serif" id="confirmed-room-name">Suite Majestic</h3>
+          <p class="success-desc text-slate">{t(locale, 'booking_page.success_sub')}</p>
+
+          <!-- Voucher Code Card -->
+          <div class="voucher-box">
+            <span class="voucher-label">{t(locale, 'booking_page.voucher_code')}</span>
+            <span class="voucher-code font-serif" id="confirmed-voucher-code">DC-CALI-2026-9874</span>
+          </div>
+
+          <div class="confirmed-meta-list text-slate">
+            <div>
+              <span>{locale === 'en' ? 'Guest:' : 'Huésped:'}</span>
+              <strong id="confirmed-guest-name">Carlos Mendoza</strong>
+            </div>
+            <div>
+              <span>{locale === 'en' ? 'Stay Dates:' : 'Fechas:'}</span>
+              <strong id="confirmed-stay-dates">2026-09-20 al 2026-09-22</strong>
+            </div>
+            <div>
+              <span>{locale === 'en' ? 'Rate Plan:' : 'Plan:'}</span>
+              <strong id="confirmed-plan-name">Tarifa Flexible</strong>
+            </div>
+            <div>
+              <span>{locale === 'en' ? 'Total Guaranteed:' : 'Total Liquidado:'}</span>
+              <strong id="confirmed-total-price" class="font-serif text-ink">$1.988.000 COP</strong>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="success-actions">
+            <a 
+              id="whatsapp-confirm-link" 
+              href="https://wa.me/573108933000" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="btn btn-primary btn-whatsapp-confirm"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M20.52 3.48A11.93 11.93 0 0 0 12.04 0C5.46 0 .11 5.35.11 11.93c0 2.1.55 4.15 1.6 5.96L0 24l6.28-1.65a11.88 11.88 0 0 0 5.76 1.48h.01c6.58 0 11.93-5.35 11.93-11.93 0-3.19-1.24-6.19-3.46-8.42zM12.05 21.82a9.88 9.88 0 0 1-5.04-1.38l-.36-.21-3.73.98.99-3.64-.23-.37a9.89 9.89 0 0 1-1.52-5.27c0-5.46 4.45-9.91 9.91-9.91 2.65 0 5.13 1.03 7 2.91 1.88 1.88 2.91 4.36 2.91 7.01 0 5.46-4.44 9.91-9.93 9.91zm5.43-7.42c-.3-.15-1.77-.87-2.04-.97-.28-.1-.48-.15-.68.15-.2.3-.77.97-.95 1.17-.17.2-.35.23-.65.08-.3-.15-1.26-.47-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.14-.14.3-.35.45-.53.15-.17.2-.3.3-.5.1-.2.05-.38-.03-.53-.07-.15-.68-1.64-.93-2.25-.24-.59-.49-.51-.68-.52h-.58c-.2 0-.53.07-.8.38-.28.3-1.06 1.04-1.06 2.53s1.08 2.94 1.23 3.14c.15.2 2.13 3.25 5.16 4.56.72.31 1.28.5 1.72.64.72.23 1.38.2 1.9.12.58-.09 1.77-.72 2.02-1.42.25-.7.25-1.3.17-1.42-.07-.12-.27-.2-.57-.35z"/>
+              </svg>
+              <span>{t(locale, 'booking_page.whatsapp_btn')}</span>
+            </a>
+
+            <button type="button" id="print-voucher-btn" class="btn btn-outline">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+              </svg>
+              <span>{t(locale, 'booking_page.print_btn')}</span>
+            </button>
+
+            <a href={p(locale === 'en' ? '/en' : '/')} class="link-arrow back-home-link">
+              <span>{t(locale, 'booking_page.back_home')}</span>
+              &rarr;
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+</Base>
+
+<style>
+  .booking-engine-section {
+    padding: 3.5rem 0 6rem;
+    background-color: var(--paper);
+  }
+
+  /* Guarantees Strip */
+  .booking-guarantees-strip {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 1.25rem;
+    padding: 1.5rem;
+    background-color: rgba(230, 227, 220, 0.4);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    margin-bottom: 2.5rem;
+  }
+
+  @media (min-width: 640px) {
+    .booking-guarantees-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .booking-guarantees-strip {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .guarantee-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    color: var(--ink);
+  }
+
+  .guarantee-item svg {
+    color: var(--brass);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .guarantee-item strong {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 600;
+  }
+
+  .guarantee-item p {
+    font-size: 0.78rem;
+    color: var(--slate);
+    margin-top: 2px;
+  }
+
+  /* Control Card */
+  .booking-control-card {
+    background-color: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.75rem;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    margin-bottom: 3rem;
+  }
+
+  .control-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    align-items: end;
+  }
+
+  @media (min-width: 768px) {
+    .control-grid {
+      grid-template-columns: 1.3fr 1.3fr 0.9fr 1.1fr;
+    }
+  }
+
+  .control-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .control-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--slate);
+  }
+
+  .control-input, .control-select {
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    background-color: var(--paper);
+    color: var(--ink);
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .control-input:focus, .control-select:focus {
+    outline: none;
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px rgba(169, 138, 91, 0.15);
+  }
+
+  .duration-display {
+    padding: 0.75rem 0.85rem;
+    background-color: rgba(230, 227, 220, 0.4);
+    border: 1px dashed var(--stone);
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--ink);
+    text-align: center;
+  }
+
+  .tower-filters-row {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--stone);
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .tower-filters-row {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+  }
+
+  .filter-caption {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.5rem 1rem;
+    background-color: transparent;
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    color: var(--slate);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--brass);
+    color: var(--ink);
+  }
+
+  .filter-btn.active {
+    background-color: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* Room Booking Cards List */
+  .rooms-inventory-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .room-booking-card {
+    background-color: var(--paper);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    display: grid;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .room-booking-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+
+  @media (min-width: 992px) {
+    .room-booking-card {
+      grid-template-columns: 380px 1fr;
+    }
+  }
+
+  .room-media-box {
+    position: relative;
+    width: 100%;
+    min-height: 260px;
+    background-color: var(--stone);
+  }
+
+  @media (min-width: 992px) {
+    .room-media-box {
+      min-height: 100%;
+    }
+  }
+
+  .room-engine-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .room-tower-tag {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    background-color: rgba(14, 30, 58, 0.85);
+    backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+  }
+
+  .room-main-info {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .room-title-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-bottom: 0.85rem;
+  }
+
+  @media (min-width: 768px) {
+    .room-title-strip {
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+    }
+  }
+
+  .room-title-name {
+    font-size: 1.85rem;
+    color: var(--ink);
+  }
+
+  .room-specs-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .spec-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--slate);
+    background-color: rgba(230, 227, 220, 0.5);
+    padding: 0.25rem 0.65rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .room-summary-text {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    margin-bottom: 1.25rem;
+  }
+
+  .room-perks-bullets {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  @media (min-width: 640px) {
+    .room-perks-bullets {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .room-perks-bullets li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .room-perks-bullets svg {
+    color: var(--brass);
+    flex-shrink: 0;
+  }
+
+  /* Rate Option Cards */
+  .room-rates-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    margin-top: auto;
+  }
+
+  @media (min-width: 768px) {
+    .room-rates-options {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .rate-option-card {
+    position: relative;
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: rgba(251, 250, 247, 0.6);
+    transition: all 0.2s ease;
+  }
+
+  .rate-option-card:hover {
+    border-color: var(--brass);
+    background-color: var(--paper);
+  }
+
+  .rate-option-card.is-recommended {
+    border-color: var(--brass);
+    background-color: rgba(169, 138, 91, 0.03);
+  }
+
+  .rate-badge-popular {
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    background-color: var(--brass);
+    color: #FFFFFF;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .rate-discount-tag {
+    position: absolute;
+    top: -10px;
+    right: 14px;
+    background-color: var(--ink);
+    color: var(--paper);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .rate-name {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 0.35rem;
+  }
+
+  .rate-sub {
+    font-size: 0.78rem;
+    color: var(--slate);
+    line-height: 1.4;
+    margin-bottom: 1.25rem;
+  }
+
+  .rate-pricing {
+    margin-bottom: 1.25rem;
+  }
+
+  .nightly-rate {
+    display: flex;
+    align-items: baseline;
+    gap: 0.35rem;
+  }
+
+  .nightly-rate .price-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+
+  .nightly-rate .price-term {
+    font-size: 0.8rem;
+    color: var(--slate);
+  }
+
+  .total-rate-hint {
+    font-size: 0.78rem;
+    color: var(--slate);
+    margin-top: 0.25rem;
+  }
+
+  .total-dyn-val {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .select-plan-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* Drawer Backdrop & Panel */
+  .booking-drawer-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(14, 30, 58, 0.6);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    justify-content: flex-end;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .booking-drawer-backdrop.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .booking-drawer-panel {
+    background-color: var(--paper);
+    width: 100%;
+    max-width: 580px;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    box-shadow: -10px 0 40px rgba(0, 0, 0, 0.2);
+    transform: translateX(100%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .booking-drawer-backdrop.is-open .booking-drawer-panel {
+    transform: translateX(0);
+  }
+
+  .drawer-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1.75rem 2rem 1.25rem;
+    border-bottom: 1px solid var(--stone);
+    position: sticky;
+    top: 0;
+    background-color: var(--paper);
+    z-index: 10;
+  }
+
+  .drawer-step-tag {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: var(--brass);
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .drawer-title {
+    font-size: 1.6rem;
+    color: var(--ink);
+  }
+
+  .drawer-close-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--slate);
+    padding: 0.5rem;
+    transition: color 0.2s ease;
+  }
+
+  .drawer-close-btn:hover {
+    color: var(--ink);
+  }
+
+  .drawer-body {
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+  }
+
+  /* Summary Card in Drawer */
+  .reservation-summary-card {
+    background-color: rgba(230, 227, 220, 0.35);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.5rem;
+  }
+
+  .summary-room-header {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  .summary-room-thumb {
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+  }
+
+  .summary-tower-tag {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--brass);
+    font-weight: 600;
+    display: block;
+  }
+
+  .summary-room-title {
+    font-size: 1.2rem;
+    color: var(--ink);
+    margin: 2px 0;
+  }
+
+  .summary-plan-title {
+    font-size: 0.8rem;
+  }
+
+  .summary-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  .summary-detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .detail-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--slate);
+  }
+
+  .summary-detail-item strong {
+    font-size: 0.88rem;
+    color: var(--ink);
+  }
+
+  .summary-price-breakdown {
+    padding-top: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .price-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.85rem;
+  }
+
+  .badge-included {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: #2E7D32;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .total-row {
+    padding-top: 0.75rem;
+    border-top: 1px dashed var(--stone);
+    font-size: 1.1rem;
+    color: var(--ink);
+  }
+
+  .summary-total-number {
+    font-size: 1.45rem;
+    color: var(--brass);
+  }
+
+  /* Form */
+  .guest-inputs-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.15rem;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+  }
+
+  .form-row-2 {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  @media (min-width: 480px) {
+    .form-row-2 {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .form-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .form-control {
+    padding: 0.75rem 0.85rem;
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    background-color: var(--paper);
+    color: var(--ink);
+    font-size: 0.95rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .form-control:focus {
+    outline: none;
+    border-color: var(--brass);
+    box-shadow: 0 0 0 2px rgba(169, 138, 91, 0.15);
+  }
+
+  .form-textarea {
+    resize: vertical;
+    font-family: inherit;
+  }
+
+  .direct-benefits-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1rem;
+    background-color: rgba(169, 138, 91, 0.08);
+    border: 1px solid rgba(169, 138, 91, 0.25);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+  }
+
+  .direct-benefits-box svg {
+    color: var(--brass);
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .direct-benefits-box strong {
+    display: block;
+    font-size: 0.85rem;
+  }
+
+  .direct-benefits-box p {
+    font-size: 0.78rem;
+    margin-top: 2px;
+  }
+
+  .btn-submit-reservation {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
+  /* Success View */
+  .drawer-success-view {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  .success-icon-wrap {
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background-color: #2E7D32;
+    color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.25rem;
+  }
+
+  .success-tagline {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+    color: #2E7D32;
+    margin-bottom: 0.25rem;
+  }
+
+  .success-room-title {
+    font-size: 2rem;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .success-desc {
+    font-size: 0.9rem;
+    max-width: 440px;
+    margin-bottom: 1.75rem;
+  }
+
+  .voucher-box {
+    background-color: var(--ink);
+    color: var(--paper);
+    padding: 1.25rem 2rem;
+    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1.75rem;
+    width: 100%;
+  }
+
+  .voucher-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--brass-light);
+  }
+
+  .voucher-code {
+    font-size: 1.6rem;
+    letter-spacing: 0.08em;
+    color: #FFFFFF;
+  }
+
+  .confirmed-meta-list {
+    width: 100%;
+    background-color: rgba(230, 227, 220, 0.4);
+    border: 1px solid var(--stone);
+    border-radius: var(--radius-sm);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    font-size: 0.88rem;
+    text-align: left;
+    margin-bottom: 2rem;
+  }
+
+  .confirmed-meta-list div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .success-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    width: 100%;
+  }
+
+  .btn-whatsapp-confirm {
+    background-color: #25D366;
+    color: #FFFFFF;
+    border: none;
+    padding: 0.9rem 1.25rem;
+    justify-content: center;
+    gap: 0.65rem;
+    font-size: 0.95rem;
+  }
+
+  .btn-whatsapp-confirm:hover {
+    background-color: #1EBE5D;
+    color: #FFFFFF;
+  }
+
+  .back-home-link {
+    margin-top: 0.75rem;
+    justify-content: center;
+  }
+</style>
+
+<script>
+  function setupBookingEngine() {
+    const checkinInput = document.getElementById('engine-checkin') as HTMLInputElement;
+    const checkoutInput = document.getElementById('engine-checkout') as HTMLInputElement;
+    const adultsSelect = document.getElementById('engine-adults') as HTMLSelectElement;
+    const nightsText = document.getElementById('nights-count-text');
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const roomCards = document.querySelectorAll('.room-booking-card') as NodeListOf<HTMLElement>;
+    const selectPlanBtns = document.querySelectorAll('.select-plan-btn');
+
+    // Drawer elements
+    const drawerBackdrop = document.getElementById('booking-drawer');
+    const closeDrawerBtn = document.getElementById('close-drawer-btn');
+    const formView = document.getElementById('drawer-form-view');
+    const successView = document.getElementById('drawer-success-view');
+    const guestForm = document.getElementById('confirm-reservation-form') as HTMLFormElement;
+
+    // Summary Elements
+    const summaryRoomImg = document.getElementById('summary-room-img') as HTMLImageElement;
+    const summaryRoomTower = document.getElementById('summary-room-tower');
+    const summaryRoomName = document.getElementById('summary-room-name');
+    const summaryPlanName = document.getElementById('summary-plan-name');
+    const summaryCheckin = document.getElementById('summary-checkin-val');
+    const summaryCheckout = document.getElementById('summary-checkout-val');
+    const summaryNights = document.getElementById('summary-nights-val');
+    const summaryGuests = document.getElementById('summary-guests-val');
+    const summaryNightly = document.getElementById('summary-nightly-val');
+    const summaryTotal = document.getElementById('summary-total-val');
+
+    // Success Elements
+    const confRoomName = document.getElementById('confirmed-room-name');
+    const confVoucherCode = document.getElementById('confirmed-voucher-code');
+    const confGuestName = document.getElementById('confirmed-guest-name');
+    const confStayDates = document.getElementById('confirmed-stay-dates');
+    const confPlanName = document.getElementById('confirmed-plan-name');
+    const confTotalPrice = document.getElementById('confirmed-total-price');
+    const whatsappLink = document.getElementById('whatsapp-confirm-link') as HTMLAnchorElement;
+    const printBtn = document.getElementById('print-voucher-btn');
+
+    // Selected state
+    let activeRoomSlug = '';
+    let activeRoomName = '';
+    let activeRoomTower = '';
+    let activeRoomImage = '';
+    let activePlanType = 'flexible';
+    let activePlanName = 'Tarifa Flexible con Desayuno';
+    let activeNightlyRate = 0;
+    let nightsCount = 1;
+
+    // Currency Formatter
+    const formatCOP = (num: number) => {
+      return new Intl.NumberFormat('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+      }).format(num);
+    };
+
+    // Format Date helper
+    const formatDateStr = (d: Date) => d.toISOString().split('T')[0];
+
+    // Read query params if any
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryCheckin = urlParams.get('checkin') || urlParams.get('DateIn');
+    const queryCheckout = urlParams.get('checkout') || urlParams.get('DateOut');
+    const queryAdults = urlParams.get('adults') || urlParams.get('Adults');
+    const queryRoom = urlParams.get('room');
+    const queryPlan = urlParams.get('plan');
+
+    // Init dates
+    const today = new Date();
+    const defaultIn = new Date(today);
+    defaultIn.setDate(today.getDate() + 1);
+    const defaultOut = new Date(today);
+    defaultOut.setDate(today.getDate() + 3);
+
+    if (checkinInput) {
+      checkinInput.min = formatDateStr(today);
+      checkinInput.value = queryCheckin || formatDateStr(defaultIn);
+    }
+    if (checkoutInput) {
+      checkoutInput.min = checkinInput ? checkinInput.value : formatDateStr(defaultIn);
+      checkoutInput.value = queryCheckout || formatDateStr(defaultOut);
+    }
+    if (adultsSelect && queryAdults) {
+      adultsSelect.value = queryAdults;
+    }
+
+    // Calculate nights & update all price cards
+    const updateCalculations = () => {
+      if (!checkinInput || !checkoutInput) return;
+
+      const inDate = new Date(checkinInput.value);
+      const outDate = new Date(checkoutInput.value);
+
+      if (outDate <= inDate) {
+        const next = new Date(inDate);
+        next.setDate(next.getDate() + 1);
+        checkoutInput.value = formatDateStr(next);
+      }
+      checkoutInput.min = checkinInput.value;
+
+      const diffTime = Math.abs(new Date(checkoutInput.value).getTime() - new Date(checkinInput.value).getTime());
+      nightsCount = Math.max(1, Math.ceil(diffTime / (1000 * 60 * 60 * 24)));
+
+      if (nightsText) {
+        nightsText.textContent = `${nightsCount} ${nightsCount === 1 ? 'noche' : 'noches'}`;
+      }
+
+      // Update room cards total price tags
+      const totalElements = document.querySelectorAll('.total-rate-hint') as NodeListOf<HTMLElement>;
+      totalElements.forEach(el => {
+        const base = Number(el.getAttribute('data-base')) || 0;
+        const total = base * nightsCount;
+        const valSpan = el.querySelector('.total-dyn-val');
+        if (valSpan) {
+          valSpan.textContent = formatCOP(total);
+        }
+      });
+    };
+
+    checkinInput?.addEventListener('change', updateCalculations);
+    checkoutInput?.addEventListener('change', updateCalculations);
+    adultsSelect?.addEventListener('change', updateCalculations);
+    updateCalculations();
+
+    // Tower Filters
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const selectedTower = btn.getAttribute('data-tower');
+
+        roomCards.forEach(card => {
+          const cardTower = card.getAttribute('data-tower') || '';
+          if (selectedTower === 'all' || cardTower.includes(selectedTower || '')) {
+            card.style.display = 'grid';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Handle room selection & drawer open
+    const openDrawer = (roomCard: HTMLElement, planType: string, planName: string, nightlyRate: number) => {
+      activeRoomSlug = roomCard.getAttribute('data-slug') || '';
+      activeRoomName = roomCard.getAttribute('data-room-name') || '';
+      activeRoomTower = roomCard.getAttribute('data-tower') || '';
+      activeRoomImage = roomCard.getAttribute('data-room-image') || '';
+      activePlanType = planType;
+      activePlanName = planName;
+      activeNightlyRate = nightlyRate;
+
+      // Populate summary
+      if (summaryRoomImg) summaryRoomImg.src = activeRoomImage;
+      if (summaryRoomTower) summaryRoomTower.textContent = activeRoomTower;
+      if (summaryRoomName) summaryRoomName.textContent = activeRoomName;
+      if (summaryPlanName) summaryPlanName.textContent = activePlanName;
+      if (summaryCheckin) summaryCheckin.textContent = checkinInput ? checkinInput.value : '';
+      if (summaryCheckout) summaryCheckout.textContent = checkoutInput ? checkoutInput.value : '';
+      if (summaryNights) summaryNights.textContent = `${nightsCount} ${nightsCount === 1 ? 'noche' : 'noches'}`;
+      if (summaryGuests) summaryGuests.textContent = `${adultsSelect ? adultsSelect.value : 2} Huéspedes`;
+      if (summaryNightly) summaryNightly.textContent = formatCOP(activeNightlyRate);
+      if (summaryTotal) summaryTotal.textContent = formatCOP(activeNightlyRate * nightsCount);
+
+      // Show form view, hide success view
+      if (formView) formView.style.display = 'block';
+      if (successView) successView.style.display = 'none';
+
+      // Reset drawer header
+      const drawerStepTag = document.getElementById('drawer-step-tag');
+      const drawerTitle = document.getElementById('drawer-title');
+      const drawerPanel = document.querySelector('.booking-drawer-panel');
+      if (drawerStepTag) drawerStepTag.textContent = drawerStepTag.getAttribute('data-orig') || '';
+      if (drawerTitle) drawerTitle.textContent = drawerTitle.getAttribute('data-orig') || '';
+      if (drawerPanel) drawerPanel.scrollTop = 0;
+
+      // Open drawer
+      if (drawerBackdrop) {
+        drawerBackdrop.classList.add('is-open');
+        drawerBackdrop.setAttribute('aria-hidden', 'false');
+      }
+    };
+
+    const closeDrawer = () => {
+      if (drawerBackdrop) {
+        drawerBackdrop.classList.remove('is-open');
+        drawerBackdrop.setAttribute('aria-hidden', 'true');
+      }
+    };
+
+    closeDrawerBtn?.addEventListener('click', closeDrawer);
+    drawerBackdrop?.addEventListener('click', (e) => {
+      if (e.target === drawerBackdrop) closeDrawer();
+    });
+
+    selectPlanBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const slug = btn.getAttribute('data-room-slug');
+        const planType = btn.getAttribute('data-plan-type') || 'flexible';
+        const planName = btn.getAttribute('data-plan-name') || '';
+        const nightlyRate = Number(btn.getAttribute('data-nightly')) || 0;
+        const roomCard = document.getElementById(`room-card-${slug}`);
+        if (roomCard) {
+          openDrawer(roomCard, planType, planName, nightlyRate);
+        }
+      });
+    });
+
+    // Form submission
+    guestForm?.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('guest-name') as HTMLInputElement;
+      const emailInput = document.getElementById('guest-email') as HTMLInputElement;
+      const phoneInput = document.getElementById('guest-phone') as HTMLInputElement;
+      const idInput = document.getElementById('guest-id') as HTMLInputElement;
+      const notesInput = document.getElementById('guest-notes') as HTMLTextAreaElement;
+
+      // Generate reference code
+      const randomCode = Math.floor(1000 + Math.random() * 9000);
+      const voucherCode = `DC-CALI-2026-${randomCode}`;
+      const totalPriceCOP = formatCOP(activeNightlyRate * nightsCount);
+
+      // Populate success screen
+      if (confRoomName) confRoomName.textContent = activeRoomName;
+      if (confVoucherCode) confVoucherCode.textContent = voucherCode;
+      if (confGuestName) confGuestName.textContent = nameInput ? nameInput.value : '';
+      if (confStayDates) confStayDates.textContent = `${checkinInput?.value} al ${checkoutInput?.value} (${nightsCount} ${nightsCount === 1 ? 'noche' : 'noches'})`;
+      if (confPlanName) confPlanName.textContent = activePlanName;
+      if (confTotalPrice) confTotalPrice.textContent = totalPriceCOP;
+
+      // Update drawer header for confirmation
+      const drawerStepTag = document.getElementById('drawer-step-tag');
+      const drawerTitle = document.getElementById('drawer-title');
+      const drawerPanel = document.querySelector('.booking-drawer-panel');
+      if (drawerStepTag) drawerStepTag.textContent = drawerStepTag.getAttribute('data-orig-success') || '¡Reserva Confirmada!';
+      if (drawerTitle) drawerTitle.textContent = drawerTitle.getAttribute('data-orig-voucher') || 'Comprobante de Estadía';
+
+      // WhatsApp link preparation
+      const waMsg = encodeURIComponent(
+        `Hola Hotel Dann Carlton Cali. He confirmado mi reserva directa.\n\n` +
+        `• Código: ${voucherCode}\n` +
+        `• Huésped: ${nameInput?.value}\n` +
+        `• Documento: ${idInput?.value}\n` +
+        `• Habitación: ${activeRoomName} (${activeRoomTower})\n` +
+        `• Plan: ${activePlanName}\n` +
+        `• Fechas: ${checkinInput?.value} al ${checkoutInput?.value} (${nightsCount} noches)\n` +
+        `• Huéspedes: ${adultsSelect?.value}\n` +
+        `• Total: ${totalPriceCOP}\n` +
+        (notesInput?.value ? `• Solicitudes: ${notesInput.value}\n` : '') +
+        `\nPor favor confirmar recibido de mi estadía.`
+      );
+
+      if (whatsappLink) {
+        whatsappLink.href = `https://wa.me/573108933000?text=${waMsg}`;
+      }
+
+      // Switch views and scroll to top of panel
+      if (formView) formView.style.display = 'none';
+      if (successView) successView.style.display = 'flex';
+      if (drawerPanel) drawerPanel.scrollTop = 0;
+    });
+
+    // Print button
+    printBtn?.addEventListener('click', () => {
+      window.print();
+    });
+
+    // If query room was passed in URL, scroll to it smoothly and open if requested
+    if (queryRoom) {
+      const targetCard = document.getElementById(`room-card-${queryRoom}`);
+      if (targetCard) {
+        setTimeout(() => {
+          targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          targetCard.style.outline = '2px solid var(--brass)';
+        }, 300);
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', setupBookingEngine);
+</script>
